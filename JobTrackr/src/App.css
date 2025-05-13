@@ -1,0 +1,17 @@
+@import "tailwindcss";
+@layer base {
+    :root {
+        --font-bebas: "Bebas Neue", sans-serif;
+    }
+}
+
+@layer utilities {
+    .font-bebas {
+        font-family: var(--font-bebas);
+    }
+}
+@layer base {
+    .font-comic{
+        font-family: 'Comic Neue', sans-serif;
+    }
+}
