@@ -67,7 +67,7 @@ export default function Landing() {
             <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 md:py-12">
                 <section className="text-center">
                     <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6">
-                        Track, Scan, Apply - <span className="text-indigo-500 text-5xl">JobTrackr</span> simplifying Your Job Search!
+                        Track, Scan, Apply - <span className="bg-[#fafbfb] p-3 rounded-2xl text-indigo-500 text-5xl">JobTrackr</span> simplifying Your Job Search!
                     </h1>
 
                     <div className="flex justify-center gap-4 mt-8">
