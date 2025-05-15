@@ -1,15 +1,18 @@
 import { Link } from 'react-router-dom';
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import gsap from 'gsap';
 import './App.css';
 import myImage from './assets/JobTrackr.png';
 import bg from './assets/jbg.png';
 import blur from'./assets/blur.png';
+import robot from './assets/robot.png';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 export default function Landing() {
     const leftCard = useRef(null);
     const rightCard = useRef(null);
     const thirdCenterCard = useRef(null);
+    gsap.registerPlugin(ScrollTrigger);
 
     useEffect(() => {
         const isMobile = window.innerWidth < 768;
@@ -35,14 +38,31 @@ export default function Landing() {
                 {x: '35', duration: 2, ease: 'back.out(1)'}
             );
         }
-        gsap.fromTo(thirdCenterCard.current,
-            {x:'0',
-                y:'100vh'},{y:'0',duration:2,ease:'back.out(1)'})
+        gsap.fromTo(
+            thirdCenterCard.current,
+            { y: '10vh', opacity: 0 },
+            {
+                y: 0,
+                opacity: 1,
+                duration: 2,
+                ease: 'back.out(1)',
+                scrollTrigger: {
+                    trigger: thirdCenterCard.current,
+                    start: 'top 80%',
+                    toggleActions: 'play none none none',
+                },
+            }
+        );
+
+        setTimeout(() => {
+            ScrollTrigger.refresh();
+        }, 100);
+
 
     }, []);
 
     return (
-        <div className="overflow-x-hidden min-h-screen bg-gray-50"
+        <div className="overflow-x-hidden overflow-y-hidden min-h-screen bg-gray-50 animate-scroll-bg"
              style={{
                  backgroundImage: `url(${bg})`,
                  backgroundSize: "cover",
@@ -67,7 +87,7 @@ export default function Landing() {
             <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 md:py-12">
                 <section className="text-center">
                     <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6">
-                        Track, Scan, Apply - <span className="bg-[#fafbfb] p-3 rounded-2xl text-indigo-500 text-5xl">JobTrackr</span> simplifying Your Job Search!
+                        Track, Scan, Apply - <span className="sm:bg-[#fafbfb] p-3 rounded-2xl text-indigo-500 text-5xl">JobTrackr</span> simplifying Your Job Search!
                     </h1>
 
                     <div className="flex justify-center gap-4 mt-8">
@@ -127,7 +147,8 @@ export default function Landing() {
                     </div>
                 </div>
             </div>
-            <div className="px-4 sm:px-6 py-8 flex flex-col md:flex-row gap-6 md:gap-8 justify-center max-w-7xl mx-auto">
+            <div className="px-4 sm:px-6 py-8 flex flex-col md:flex-row gap-6 md:gap-8 justify-center max-w-7xl mx-auto mt-[50px]">
+
                 <div
                     ref={thirdCenterCard}
                     className="bg-white rounded-3xl shadow-indigo-300 shadow-xl w-full md:w-3/4 overflow-hidden"
@@ -141,6 +162,9 @@ export default function Landing() {
                         }}
                     >
                         <div className="relative bg-white bg-opacity-80 h-full w-full flex flex-col justify-center items-center p-6">
+
+                            <img className="absolute top-4 left-2 h-[40px] w-[40px] md:h-[60px] md:w-[60px]" src={robot} />
+
                             <h2 className="text-xl md:text-2xl font-bold text-blue-600 mb-4 text-center">
                                 AI-Powered Resume Technology
                             </h2>
@@ -165,11 +189,11 @@ export default function Landing() {
                                     <p className="text-xs text-gray-700">Evaluates degrees, fields of study, and prestigiousness of institutions</p>
                                 </div>
                             </div>
-                            <a href="/login">
+                            <Link to="/signup">
                                 <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition duration-300">
                                     Get Your Resume Score
                                 </button>
-                            </a>
+                            </Link>
                         </div>
                     </div>
                 </div>

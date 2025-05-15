@@ -13,7 +13,7 @@ const ProgressBar = ({ data }: { data: ResumeData }) => {
                 (data.educationScore / 20) * 20 +
                 (data.skillsScore / 30) * 30 +
                 (data.projectsScore / 25) * 10;
-            setScore(totalScore);
+            setScore(Number(totalScore.toFixed(1)));
 
         },delay)
         return () => clearInterval(timer);
@@ -22,6 +22,7 @@ const ProgressBar = ({ data }: { data: ResumeData }) => {
 
     const maxScore = 100;
     const progress = (score / maxScore) * 100;
+
     return (
         <div className="relative w-full bg-[#e0e0e0] rounded-2xl">
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-black font-semibold transition-all duration-500">

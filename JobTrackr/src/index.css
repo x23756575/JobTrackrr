@@ -3,3 +3,18 @@ html, body {
     margin: 0;
     height: 100%;
 }
+@layer utilities {
+    @keyframes scroll-bg {
+        0% {
+            background-position: 0% 0%;
+        }
+        100% {
+            background-position: 100% 0%;
+        }
+    }
+
+    .animate-scroll-bg {
+        animation: scroll-bg 40s linear infinite;
+        background-repeat: repeat-x;
+    }
+}
