@@ -40,6 +40,7 @@ export default function ResumePage(): React.ReactElement {
     const middleCircle = useRef<HTMLImageElement>(null);
     const rightCircle = useRef<HTMLImageElement>(null);
 
+    const isMobile = window.innerWidth < 768;
 
     useEffect(() => {
         if (!leftCircle.current || !middleCircle.current || !rightCircle.current) return;
@@ -550,7 +551,7 @@ Keep total response under 200 words. Be decisive, specific, and unapologetically
                     <motion.span
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent"
+                        className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent text-center sm:text-left"
                     >
                         JobTrackr
                     </motion.span>

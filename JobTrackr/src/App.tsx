@@ -7,6 +7,7 @@ import SignupPage from "./SignupPage.tsx";
 import Home from "./HomePage.tsx";
 import ResumePage from "./ResumePage.tsx";
 import ChatPage from "./Chat.tsx";
+import TrackPage from "./Applications.tsx";
 
 export default function App() {
 
@@ -20,6 +21,7 @@ export default function App() {
        <Route path="/signup" element={<SignupPage/>}></Route>
        <Route path="/scan" element={<ResumePage/>}></Route>
        <Route path="/chat" element={<ChatPage/>}></Route>
+       <Route path="/track" element={<TrackPage/>}></Route>
     </Routes>
    </BrowserRouter>
   )
