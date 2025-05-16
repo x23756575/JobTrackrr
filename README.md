@@ -1,19 +1,32 @@
-<h1 align="center">Welcome to jobtrackr 👋</h1>
-<p>
+<h1 align="center">Welcome to JobTrackr 👋</h1>
+<p align="center">
   <img alt="Version" src="https://img.shields.io/badge/version-0.0.0-blue.svg?cacheSeconds=2592000" />
 </p>
 
-> The applications name is JobTrackr, this app helps job seekers send there resume for AI scanning using nlp, and also an AI assistant run by ollama mistral and can only receive answers about there resume. There is a application tracker, where users can insert data about there job applications, a home page with a list of jobs and a messager where users can message eachother and other employers 
+> **JobTrackr** is a tool for job seekers to manage and streamline their application process. It includes AI-powered resume scanning (via NLP), an AI assistant (powered by Ollama Mistral) that can answer questions based only on the user’s resume, a job application tracker, a home page listing job opportunities, and a messaging system for chatting with other users and employers.
 
-## Install
+---
 
-```sh
-npm install, npm run dev
+## 🚀 Features
+
+- ✅ AI resume scanner using NLP
+- 🤖 Private AI assistant (Ollama Mistral) — answers only from your resume
+- 📝 Job application tracker
+- 🏠 Home page with job listings
+- 💬 Built-in messenger for user and employer communication
+
+---
+
+## 🛠 Install
+
+```bash
+npm install
+
 ```
 
 ## Usage
 
-```sh
+```bash
 npm run dev
 ```
 
@@ -27,6 +40,3 @@ npm run dev
 ## Show your support
 
 Give a ⭐️ if this project helped you!
-
-***
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
