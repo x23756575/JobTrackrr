@@ -135,7 +135,7 @@ export default function ResumePage(): React.ReactElement {
         formData.append('file', selectedFile);
 
         try {
-            const response = await axios.post('http://localhost:8080/resume', formData, {
+            const response = await axios.post('http://192.168.1.4:8080/resume', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
 
@@ -180,7 +180,7 @@ export default function ResumePage(): React.ReactElement {
 
     const getText = async(): Promise<string | null> => {
         try {
-            const response = await fetch(`http://localhost:8080/text`);
+            const response = await fetch(`http://192.168.1.4:8080/text`);
             if (!response.ok) {
                 throw new Error('Failed to fetch resume text');
             }
@@ -195,17 +195,44 @@ export default function ResumePage(): React.ReactElement {
 
     };
 
-    const prepend: string = `You are a professional resume evaluation assistant with extremely high standards for quality assessment. Analyze the provided resume with strict scrutiny and brutal honesty:
+    const prepend: string = `You are a professional resume evaluation assistant with strict rules and zero tolerance for invalid or incomplete resumes.
 
-CONTENT VALIDATION CHECK:
-IF A RESUME HAS LESS THAN 10 WORDS, QUICKLY RETURN A MESSAGE OF INVALID RESUME
+============================
+HARD VALIDATION RULES
+============================
 
-If the resume is completely empty OR contains only greeting words (like "hi", "hello") OR contains less than 50 words total, respond ONLY with: "This is not a valid resume. I can only evaluate actual resume content with proper sections including work experience, education, and skills. Please upload a complete resume for evaluation."
-Do not proceed with any further evaluation if this check fails.
+IMPORTANT
+IF WORD COUNT IS LESS THAN 30 REJECT WITH A MESSAGE ON HOW TO IMPROVE
+IMPORTANT
 
-CONTENT SPARSITY CHECK: If the resume passes the validation check but contains minimal information (less than 3 work experiences or fewer than 5 distinct skills), explicitly state: "Your resume is significantly underdeveloped. It lacks [specific missing elements]. This will severely impact your job prospects."
+RULE 1: If the resume has fewer than 10 words, respond immediately:
+"This is not a valid resume."
 
-ONLY MARK HIGH IF THERE RESUME MATCHES KEYWORDS:
+RULE 2: If the resume is empty, contains only greetings (e.g. "hi", "hello"), or has fewer than 50 total words, respond ONLY with:
+"This is not a valid resume. I can only evaluate actual resume content with proper sections including work experience, education, and skills. Please upload a complete resume for evaluation."
+
+DO NOT evaluate, score, or provide any feedback if either rule applies. STOP immediately.
+
+============================
+VALIDATION CONTINUES ONLY IF RULES PASS
+============================
+
+Next, check if the resume includes all of the following core sections:
+- Contact Information
+- Work Experience
+- Education
+- Skills
+
+If any section is missing, deduct 10 points per missing section. Also explicitly state:
+"Missing critical section: [Section Name]"
+
+============================
+SPARSITY CHECK
+============================
+
+If the resume has fewer than 3 work experiences OR fewer than 5 distinct skills, state:
+"Your resume is significantly underdeveloped. It lacks [specific missing elements]. This will severely impact your job prospects."
+
 
 private static final List<String> JOB_TITLES = Arrays.asList(
     // Original job titles
@@ -445,7 +472,7 @@ private static final List<String> PRESTIGIOUS_SCHOOLS = Arrays.asList(
     "university of tennessee", "university of oklahoma", "university of iowa", "florida state university", "fsu", 
     "texas a&m university", "tamu", "university of georgia", "university of south carolina"
     
-    USE THE ABOVE KEYWORDS TO RANK THERE RESUMEl
+    USE THE ABOVE KEYWORDS TO RANK THERE RESUME
 REQUIRED SECTION VERIFICATION:
 
 Before scoring, verify the presence of ALL core resume sections: Contact Information, Work Experience, Education, and Skills.
@@ -484,7 +511,7 @@ Keep total response under 200 words. Be decisive, specific, and unapologetically
 
         const resumeText = await getText();
 
-        const response = await fetch("http://localhost:11434/api/generate", {
+        const response = await fetch("http://192.168.1.4:11434/api/generate", {
             method: "POST",
             headers: {
                 "Content-type": "application/json"
@@ -580,8 +607,8 @@ Keep total response under 200 words. Be decisive, specific, and unapologetically
                             className="grid grid-cols-1 lg:grid-cols-8 gap-8"
                         >
 
-                            <div className="lg:col-span-5 bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-8 border border-gray-200">
-                                <h2 className="text-3xl font-bold mb-8 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                            <motion.div whileHover={{scale:1.02}} className="lg:col-span-5 bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-8 border border-gray-200">
+                                <h2 className="text-3xl text-center font-bold mb-8 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                                     Analysis Results
                                 </h2>
 
@@ -593,7 +620,9 @@ Keep total response under 200 words. Be decisive, specific, and unapologetically
                                             key={key}
                                             initial={{ opacity: 0, x: -20 }}
                                             animate={{ opacity: 1, x: 0 }}
-                                            className="p-4 bg-white rounded-xl shadow-sm"
+                                            whileTap={{scale:1.05}}
+                                            whileHover={{scale:1.02}}
+                                            className=" p-4 bg-white rounded-xl shadow-sm"
                                         >
                                             <h3 className="text-lg font-semibold capitalize mb-2">
                                                 {key} Score
@@ -602,7 +631,7 @@ Keep total response under 200 words. Be decisive, specific, and unapologetically
                                         </motion.div>
                                     ))}
                                 </div>
-                            </div>
+                            </motion.div>
 
                             {/* AI Assistant section */}
                             <div className="lg:col-span-3">
