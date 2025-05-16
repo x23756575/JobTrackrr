@@ -24,7 +24,7 @@ npm install
 
 ```
 
-## Usage
+## 🧪 Usage
 
 ```bash
 npm run dev
