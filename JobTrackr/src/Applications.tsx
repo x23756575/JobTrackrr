@@ -8,6 +8,8 @@ import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import axios from "axios";
 import {toast} from "react-toastify";
 import React from "react";
+import bin from "./assets/removebin.png";
+import edit from "./assets/editbutton.png";
 
 interface formData {
     job:string;
@@ -23,12 +25,35 @@ interface trackData{
     description:string;
     date: string;
 }
+interface editFormData{
+    id:string;
+    job:string;
+    position:string;
+    status:string;
+    description:string;
+}
+interface appStats{
+    interviews:number;
+    offers:number;
+    applies:number;
+    rejections:number;
+
+}
+const initialEditState: editFormData = {
+    id:'',
+    job: '',
+    position: '',
+    status: '',
+    description: ''
+};
+
 const initialFormState: formData = {
     job: '',
     position: '',
     status: '',
     description: ''
 };
+
 
 // Now use this constant as the initial value in useState:
 
@@ -38,7 +63,19 @@ export default function TrackPage(){
     const [hideForm, setHideForm] = useState<boolean>(true);
     const [error, setError] = useState<string>('');
     const [track, setTrack] = useState<trackData[]>([]);
-    const [appRl, setAppRl] = useState<boolean>(false);
+    const [appRl, setAppRl] = useState<boolean>(true);
+    const [editForm, setEditForm] = useState<editFormData>(initialEditState)
+    const [hideEdit,setHideEdit] = useState<boolean>(true);
+
+    const initialStats : appStats = {
+        interviews:0,
+        offers:0,
+        applies:0,
+        rejections:0,
+    }
+    const [stats, setStats] = useState<appStats>(initialStats);
+    const [total, setTotal] = useState<number>(0);
+    const[trackId, setTrackId] = useState<string | null>(0);
 
     gsap.registerPlugin(ScrollToPlugin);
 
@@ -64,11 +101,11 @@ export default function TrackPage(){
             .join(' ');
     };
     useEffect(() => {
-        if (hideForm) {
+        if (hideForm || hideEdit) {
 
         gsap.to(window, {duration: 1, scrollTo: {y: 0}, ease: "power2.out"});
         }
-    }, [hideForm]);
+    }, [hideForm,hideEdit]);
 
     useEffect(() => {
 
@@ -80,8 +117,33 @@ export default function TrackPage(){
             .then(data => {
                 console.log(data);      // logs the parsed JSON data
                 setTrack(data);
+
+                const stats : appStats = {
+                    interviews:0,
+                    offers:0,
+                    applies:0,
+                    rejections:0,
+                }
+                for (let i = 0; i < data.length; i++) {
+
+                    if(data[i].status === 'Interviewing'){
+                        stats.interviews++;
+
+                    }else if(data[i].status === 'Rejected'){
+                        stats.rejections++;
+                    }
+                    else if(data[i].status === 'Offered'){
+                        stats.offers++;
+
+                    }else if(data[i].status === 'Applied'){
+                        stats.applies++;
+                    }
+                    setTotal(stats.rejections + stats.offers + stats.interviews + stats.applies);
+                    setStats(stats)
+                }
             })
             .catch(error => console.error('error', error));
+
 
 
 
@@ -97,6 +159,33 @@ export default function TrackPage(){
             if(response.status === 200){
                 setHideForm(true)
                 setForm(initialFormState)
+            }
+            console.log(response.data)
+        } catch (err) {
+            setError('Invalid credentials or an error occurred');
+
+            console.error('Login error:', err);
+        }
+
+    };
+    const handleEdit = async(e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        console.log("submitted")
+        try {
+            const response = await axios.post('http://localhost:8080/editapp',editForm )
+
+            if(response.status === 200){
+                const updated = await axios.get('http://localhost:8080/appdata');
+                setTrack(updated.data);
+
+                setTrackId(null)
+
+                setHideForm(true)
+                setHideEdit(false);
+
+                setEditForm(initialEditState);
+
+
             }
             console.log(response.data)
         } catch (err) {
@@ -142,19 +231,19 @@ export default function TrackPage(){
                 <div className="grid grid-cols-4 mx-auto gap-5 mt-6 w-[calc(100vw-150px)] mb-[50px]">
                     <div className="bg-[#FEFEFF] rounded-lg shadow">
                         <p className="text-md p-4 text-gray-600" >Total applications</p>
-                        <p className="text-2xl font-bold ml-4 mb-4">21</p>
+                        <p className="text-2xl font-bold ml-4 mb-4">{total}</p>
                     </div>
                     <div className="bg-[#FEFEFF] rounded-lg shadow">
                         <p className="text-md p-4 text-gray-600 ">Interviews</p>
-                        <p className="text-2xl text-purple-500 font-bold ml-4 mb-4">15</p>
+                        <p className="text-2xl text-purple-500 font-bold ml-4 mb-4">{stats.interviews}</p>
                     </div>
                     <div className=" bg-[#FEFEFF] rounded-lg shadow">
                         <p className="text-md p-4 text-gray-600">Offers</p>
-                        <p className="text-2xl text-indigo-600 font-bold ml-4 mb-4">4</p>
+                        <p className="text-2xl text-indigo-600 font-bold ml-4 mb-4">{stats.offers}</p>
                     </div>
                     <div className="bg-[#FEFEFF] rounded-lg shadow">
                         <p className="text-md p-4 text-gray-600">Rejections</p>
-                        <p className="text-2xl text-red-600  font-bold ml-4 mb-4">2</p>
+                        <p className="text-2xl text-red-600  font-bold ml-4 mb-4">{stats.rejections}</p>
                     </div>
                 </div>
                 <div className="grid grid-rows-[auto_1fr] w-[calc(100vw-150px)] h-[100vh] mx-auto">
@@ -205,6 +294,7 @@ export default function TrackPage(){
                                     <label htmlFor="description" className="text-sm font-medium text-gray-700 mb-1">Description</label>
                                     <textarea
                                         id="description"
+                                        maxLength={20}
                                         rows={3}
                                         placeholder="Add notes about your application"
                                         className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
@@ -256,28 +346,128 @@ export default function TrackPage(){
                             <span className="text-left  font-medium text-gray-500">Description</span>
                             <span className="text-left  font-medium text-gray-500">Date applied</span>
                         </div>
-                        <div className="grid w-full [&>*:nth-child(odd)]:bg-gray-50 p-3 pb-4 pl-10">
-                            {track?.map((t: trackData) => (
-                                <div key={t.id} className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr] mb-2 py-2 px-4 w-full rounded  hover:bg-gray-50">
-                                    <span className="text-left font-bold text-gray-700">{t.job}</span>
-                                    <span className="text-left text-gray-700">{t.position}</span>
-                                    <span className="text-left font-medium">
+                        <div className="w-full p-3 pb-4 pl-10">
+                            <div className="grid [&>*:nth-child(odd)]:bg-gray-50">
 
-                                        <motion.div className={`text-xs font-medium py-2 px-3 inline-flex rounded-3xl ${
-                                            t.status === 'Interviewing' ? 'bg-purple-200 text-purple-800' :
-                                                t.status === 'Offered' ? 'bg-blue-100 text-blue-800' :
-                                                    t.status === 'Applied' ? 'bg-gray-100 text-gray-800' :
-                                                        t.status === 'Rejected' ? 'bg-red-100 text-red-800' :
-                                                            'bg-gray-100 text-gray-600'
-                                        }`}>
+                                {track?.map((t: trackData) => (
+                                    trackId === t.id ? (
+                                        <React.Fragment key={t.id}>
+
+                                                <form className="flex flex-wrap md:grid md:grid-cols-5 gap-2 bg-white p-4 rounded-2xl shadow" onSubmit={handleEdit}>
+                                                <input
+                                                    type="text"
+                                                    name="company"
+                                                    placeholder="Company"
+                                                    value={editForm.job}
+                                                    onChange={(e) => setEditForm({ ...editForm, job: e.target.value })}
+                                                    className="w-full md:w-auto p-2 border border-gray-300 rounded"
+                                                />
+                                                <input
+                                                    type="text"
+                                                    name="position"
+                                                    placeholder="Position"
+                                                    value={editForm.position}
+                                                    onChange={(e) => setEditForm({ ...editForm, position: e.target.value })}
+                                                    className="w-full md:w-auto p-2 border border-gray-300 rounded"
+                                                />
+                                                <select
+                                                    name="status"
+                                                    value={editForm.status}
+                                                    onChange={(e) => setEditForm({ ...editForm, status: e.target.value })}
+                                                    className="w-full md:w-auto p-2 border border-gray-300 rounded"
+                                                >
+                                                    <option value="">Select status</option>
+                                                    <option value="Applied">Applied</option>
+                                                    <option value="Interviewing">Interviewing</option>
+                                                    <option value="Offered">Offered</option>
+                                                    <option value="Rejected">Rejected</option>
+                                                </select>
+                                                <input
+                                                    type="text"
+                                                    name="description"
+                                                    placeholder="Description"
+                                                    value={editForm.description}
+                                                    onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+                                                    className="w-full md:w-auto p-2 border border-gray-300 rounded"
+                                                />
+                                                <input
+                                                    type="text"
+                                                    name="date"
+                                                    placeholder="date"
+                                                    value={formatDate(t.date)}
+                                                    className="w-full md:w-auto p-2 border border-none rounded"
+
+
+                                                />
+
+                                                <button
+
+                                                    className="bg-gradient-to-r from-green-300 to-indigo-500 text-white mb-2 py-1 px-3 w-[50%] rounded-xl hover:opacity-90 transition-opacity font-medium"
+
+                                                    type="submit"
+                                                >
+                                                    Edit
+                                                </button>
+
+                                            </form>
+
+                                        </React.Fragment>
+                                    ):(
+                                    <div
+                                    key={t.id}
+                                className="flex flex-wrap md:grid md:grid-cols-5  mb-2 py-3 px-4 w-full rounded-2xl hover:bg-gray-50 gap-y-1"
+                            >
+                                        <span className="w-full md:w-auto text-left font-bold text-gray-700">
+                                          {t.job}
+                                        </span>
+                                <span className="w-full md:w-auto text-left text-gray-700">
+                                          {t.position}
+                                        </span>
+                                <span className="w-full md:w-auto text-left font-medium">
+                                          <motion.div
+                                              className={`text-xs font-medium py-2 px-3 inline-flex rounded-3xl ${
+                                                  t.status === 'Interviewing'
+                                                      ? 'bg-purple-200 text-purple-800'
+                                                      : t.status === 'Offered'
+                                                          ? 'bg-blue-100 text-blue-800'
+                                                          : t.status === 'Applied'
+                                                              ? 'bg-gray-100 text-gray-800'
+                                                              : t.status === 'Rejected'
+                                                                  ? 'bg-red-100 text-red-800'
+                                                                  : 'bg-gray-100 text-gray-600'
+                                              }`}
+                                          >
                                             {capitalizeWords(t.status)}
-                                        </motion.div>
-                                    </span>
-                                    <span className="text-left font-medium text-gray-500">{t.description}</span>
-                                    <span className="text-left font-medium text-gray-500">{formatDate(t.date)}</span>
-                                </div>
-                            ))}
+                                          </motion.div>
+                                        </span>
+                                <span className="w-full md:w-auto text-left font-medium text-gray-500">
+                                          {t.description}
+                                        </span>
+                                <span className="relative w-full md:w-auto text-left font-medium text-gray-500">
+                                          {formatDate(t.date)}
+                                    <div className="absolute top-0 right-0 my-auto">
+                                                <img className="absolute right-6 h-[17px] w-[17px]"
+                                                     onClick={() => {
+                                                         setEditForm({
+                                                             id: t.id,
+                                                             job: t.job,
+                                                             position: t.position,
+                                                             status: t.status,
+                                                             description: t.description,
+                                                         });
+                                                         setTrackId(t.id);
+                                                         setHideEdit(true)
+                                                     }} src={edit}/>
+                                                <img className=" h-[17px] w-[17px]" src={bin}/>
+
+                                            </div>
+                                        </span>
+                            </div>
+                                    )
+                                ))}
+                            </div>
                         </div>
+
                     </div>
                 </div>
 
