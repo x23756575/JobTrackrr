@@ -512,7 +512,7 @@ Keep total response under 200 words. Be decisive, specific, and unapologetically
 
         const resumeText = await getText();
 
-        const response = await fetch("http://192.168.1.4:11434/api/generate", {
+        const response = await fetch("http://localhost:11434/api/generate", {
             method: "POST",
             headers: {
                 "Content-type": "application/json"

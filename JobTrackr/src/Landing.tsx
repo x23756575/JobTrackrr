@@ -40,7 +40,7 @@ export default function Landing() {
         }
         gsap.fromTo(
             thirdCenterCard.current,
-            { y: '10vh', opacity: 0 },
+            { y: '20vh', opacity: 0 },
             {
                 y: 0,
                 opacity: 1,
@@ -53,6 +53,45 @@ export default function Landing() {
                 },
             }
         );
+
+        ScrollTrigger.create({
+            trigger: thirdCenterCard.current,
+            start: 'top 80%',
+            end: 'bottom top',
+            onEnter: () => {
+                gsap.fromTo(
+                    thirdCenterCard.current,
+                    { y: '20vh', opacity: 0 },
+                    {
+                        y: 0,
+                        opacity: 1,
+                        duration: 2,
+                        ease: 'back.out(1)',
+                        scrollTrigger: {
+                            trigger: thirdCenterCard.current,
+                            start: 'top 80%',
+                            toggleActions: 'play none none none',
+                        },
+                    }
+                );
+            },
+            onLeave: () => {
+                gsap.to(thirdCenterCard.current, {
+                    y: '20vh',
+                    opacity: 0,
+                    duration: 1,
+                    ease: 'power1.in',
+                });
+            },
+            onLeaveBack: () => {
+                gsap.to(thirdCenterCard.current, {
+                    y: '20vh',
+                    opacity: 0,
+                    duration: 1,
+                    ease: 'power1.in',
+                });
+            },
+        });
 
         setTimeout(() => {
             ScrollTrigger.refresh();
@@ -93,13 +132,13 @@ export default function Landing() {
                     <div className="flex justify-center gap-4 mt-8">
                         <Link
                             to="/signup"
-                            className="px-4 md:px-6 py-2 md:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                            className="px-4 md:px-6 py-2 md:py-3 font-medium border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition"
                         >
                             Signup
                         </Link>
                         <Link
                             to="/login"
-                            className="px-4 md:px-6 py-2 md:py-3 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition"
+                            className="px-4 md:px-6 py-2 md:py-3 font-medium border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition"
                         >
                             Login
                         </Link>

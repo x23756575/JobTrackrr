@@ -7,12 +7,21 @@ import gsap from 'gsap';
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import axios from "axios";
 import {toast} from "react-toastify";
+import React from "react";
 
 interface formData {
     job:string;
     position:string;
     status:string;
     description:string;
+}
+interface trackData{
+    id:string;
+    job:string;
+    position:string;
+    status:string;
+    description:string;
+    date: string;
 }
 const initialFormState: formData = {
     job: '',
@@ -28,6 +37,9 @@ export default function TrackPage(){
     const [form, setForm] = useState<formData>(initialFormState);
     const [hideForm, setHideForm] = useState<boolean>(true);
     const [error, setError] = useState<string>('');
+    const [track, setTrack] = useState<trackData[]>([]);
+    const [appRl, setAppRl] = useState<boolean>(false);
+
     gsap.registerPlugin(ScrollToPlugin);
 
     const cancelForm = () => {
@@ -36,12 +48,45 @@ export default function TrackPage(){
         setHideForm(true);
 
     }
+    const formatDate = (dateString: string): string => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+        });
+    };
+    const capitalizeWords = (str: string): string => {
+        return str
+            .toLowerCase()
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    };
     useEffect(() => {
         if (hideForm) {
 
         gsap.to(window, {duration: 1, scrollTo: {y: 0}, ease: "power2.out"});
         }
     }, [hideForm]);
+
+    useEffect(() => {
+
+        fetch('http://localhost:8080/appdata')
+            .then(response => {
+                console.log(response);  // logs the raw Response object
+                return response.json(); // parse JSON for next then()
+            })
+            .then(data => {
+                console.log(data);      // logs the parsed JSON data
+                setTrack(data);
+            })
+            .catch(error => console.error('error', error));
+
+
+
+    }, []);
+
 
     const handleSubmit = async(e: FormEvent<HTMLFormElement>) => {
         console.log("submitted")
@@ -150,10 +195,10 @@ export default function TrackPage(){
                                         required
                                     >
                                         <option value="">Select status</option>
-                                        <option className="font-bold text-gray-600" value="applied">Applied</option>
-                                        <option className="font-bold text-purple-500" value="interviewing">Interviewing</option>
-                                        <option className="font-bold text-indigo-600" value="offered">Offered</option>
-                                        <option className="font-bold text-red-600" value="rejected">Rejected</option>
+                                        <option className="font-bold text-gray-600" value="Applied">Applied</option>
+                                        <option className="font-bold text-purple-500" value="Interviewing">Interviewing</option>
+                                        <option className="font-bold text-indigo-600" value="Offered">Offered</option>
+                                        <option className="font-bold text-red-600" value="Rejected">Rejected</option>
                                     </select>
                                 </div>
                                 <div className="flex flex-col">
@@ -211,17 +256,27 @@ export default function TrackPage(){
                             <span className="text-left  font-medium text-gray-500">Description</span>
                             <span className="text-left  font-medium text-gray-500">Date applied</span>
                         </div>
-                        <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr] w-full bg-gray-50 p-3 pb-4 pl-10">
-                            <span className="text-left font-bold text-gray-700">Google</span>
-                            <span className="text-left  text-gray-700 ">Software engineer</span>
-                            <span className="text-left  font-medium text-purple-800">
-                                <motion.div className="bg-purple-200 text-xs py-2 px-3 inline-flex rounded-3xl">
-                                    Interviewing
-                                </motion.div>
-                            </span>
-                            <span className="text-left  font-medium text-gray-500">Going well</span>
-                            <span className="text-left  font-medium text-gray-500">25-03-2025</span>
+                        <div className="grid w-full [&>*:nth-child(odd)]:bg-gray-50 p-3 pb-4 pl-10">
+                            {track?.map((t: trackData) => (
+                                <div key={t.id} className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr] mb-2 py-2 px-4 w-full rounded  hover:bg-gray-50">
+                                    <span className="text-left font-bold text-gray-700">{t.job}</span>
+                                    <span className="text-left text-gray-700">{t.position}</span>
+                                    <span className="text-left font-medium">
 
+                                        <motion.div className={`text-xs font-medium py-2 px-3 inline-flex rounded-3xl ${
+                                            t.status === 'Interviewing' ? 'bg-purple-200 text-purple-800' :
+                                                t.status === 'Offered' ? 'bg-blue-100 text-blue-800' :
+                                                    t.status === 'Applied' ? 'bg-gray-100 text-gray-800' :
+                                                        t.status === 'Rejected' ? 'bg-red-100 text-red-800' :
+                                                            'bg-gray-100 text-gray-600'
+                                        }`}>
+                                            {capitalizeWords(t.status)}
+                                        </motion.div>
+                                    </span>
+                                    <span className="text-left font-medium text-gray-500">{t.description}</span>
+                                    <span className="text-left font-medium text-gray-500">{formatDate(t.date)}</span>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>
