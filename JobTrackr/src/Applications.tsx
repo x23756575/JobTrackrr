@@ -35,7 +35,7 @@ interface editFormData{
 interface appStats{
     interviews:number;
     offers:number;
-    applies:number;
+    hired:number;
     rejections:number;
 
 }
@@ -70,7 +70,7 @@ export default function TrackPage(){
     const initialStats : appStats = {
         interviews:0,
         offers:0,
-        applies:0,
+        hired:0,
         rejections:0,
     }
     const [stats, setStats] = useState<appStats>(initialStats);
@@ -111,17 +111,17 @@ export default function TrackPage(){
 
         fetch('http://localhost:8080/appdata')
             .then(response => {
-                console.log(response);  // logs the raw Response object
-                return response.json(); // parse JSON for next then()
+                console.log(response);
+                return response.json();
             })
             .then(data => {
-                console.log(data);      // logs the parsed JSON data
+                console.log(data);
                 setTrack(data);
 
                 const stats : appStats = {
                     interviews:0,
                     offers:0,
-                    applies:0,
+                    hired:0,
                     rejections:0,
                 }
                 for (let i = 0; i < data.length; i++) {
@@ -135,10 +135,10 @@ export default function TrackPage(){
                     else if(data[i].status === 'Offered'){
                         stats.offers++;
 
-                    }else if(data[i].status === 'Applied'){
-                        stats.applies++;
+                    }else if(data[i].status === 'Hired'){
+                        stats.hired++;
                     }
-                    setTotal(stats.rejections + stats.offers + stats.interviews + stats.applies);
+
                     setStats(stats)
                 }
             })
@@ -147,7 +147,7 @@ export default function TrackPage(){
 
 
 
-    }, []);
+    }, [form,editForm]);
 
 
     const handleSubmit = async(e: FormEvent<HTMLFormElement>) => {
@@ -229,19 +229,19 @@ export default function TrackPage(){
                     </div>
                 </nav>
                 <div className="grid grid-cols-4 mx-auto gap-5 mt-6 w-[calc(100vw-150px)] mb-[50px]">
-                    <div className="bg-[#FEFEFF] rounded-lg shadow">
-                        <p className="text-md p-4 text-gray-600" >Total applications</p>
-                        <p className="text-2xl font-bold ml-4 mb-4">{total}</p>
+                    <div className="bg-gradient-to-r from-[#FEFEFF] to-green-100 rounded-lg shadow ">
+                        <p className="text-md p-4 text-gray-600" >Jobs Landed</p>
+                        <p className="text-2xl text-green-700 font-bold ml-4 mb-4">{stats.hired}</p>
                     </div>
-                    <div className="bg-[#FEFEFF] rounded-lg shadow">
+                    <div className="bg-gradient-to-r from-[#FEFEFF] to-purple-100 rounded-lg shadow">
                         <p className="text-md p-4 text-gray-600 ">Interviews</p>
                         <p className="text-2xl text-purple-500 font-bold ml-4 mb-4">{stats.interviews}</p>
                     </div>
-                    <div className=" bg-[#FEFEFF] rounded-lg shadow">
+                    <div className=" bg-gradient-to-r from-[#FEFEFF] to-blue-100 rounded-lg shadow">
                         <p className="text-md p-4 text-gray-600">Offers</p>
                         <p className="text-2xl text-indigo-600 font-bold ml-4 mb-4">{stats.offers}</p>
                     </div>
-                    <div className="bg-[#FEFEFF] rounded-lg shadow">
+                    <div className="bg-gradient-to-r from-[#FEFEFF] to-red-100 rounded-lg shadow">
                         <p className="text-md p-4 text-gray-600">Rejections</p>
                         <p className="text-2xl text-red-600  font-bold ml-4 mb-4">{stats.rejections}</p>
                     </div>
@@ -283,8 +283,8 @@ export default function TrackPage(){
                                         onChange={(e) => setForm({...form, status:e.target.value})}
                                         required
                                     >
-                                        <option value="">Select status</option>
-                                        <option className="font-bold text-gray-600" value="Applied">Applied</option>
+                                        <option value="">No status</option>
+                                        <option className="font-bold text-green-600" value="Hired">Hired</option>
                                         <option className="font-bold text-purple-500" value="Interviewing">Interviewing</option>
                                         <option className="font-bold text-indigo-600" value="Offered">Offered</option>
                                         <option className="font-bold text-red-600" value="Rejected">Rejected</option>
@@ -347,7 +347,7 @@ export default function TrackPage(){
                             <span className="text-left  font-medium text-gray-500">Date applied</span>
                         </div>
                         <div className="w-full p-3 pb-4 pl-10">
-                            <div className="grid [&>*:nth-child(odd)]:bg-gray-50">
+                            <div  className="grid [&>*:nth-child(odd)]:bg-gray-50">
 
                                 {track?.map((t: trackData) => (
                                     trackId === t.id ? (
@@ -376,11 +376,11 @@ export default function TrackPage(){
                                                     onChange={(e) => setEditForm({ ...editForm, status: e.target.value })}
                                                     className="w-full md:w-auto p-2 border border-gray-300 rounded"
                                                 >
-                                                    <option value="">Select status</option>
-                                                    <option value="Applied">Applied</option>
-                                                    <option value="Interviewing">Interviewing</option>
-                                                    <option value="Offered">Offered</option>
-                                                    <option value="Rejected">Rejected</option>
+                                                    <option value="">No status</option>
+                                                    <option className="font-bold text-green-600" value="Hired">Hired</option>
+                                                    <option className="font-bold text-purple-600" value="Interviewing">Interviewing</option>
+                                                    <option className="font-bold text-blue-600" value="Offered">Offered</option>
+                                                    <option className="font-bold text-red-600" value="Rejected">Rejected</option>
                                                 </select>
                                                 <input
                                                     type="text"
@@ -430,8 +430,8 @@ export default function TrackPage(){
                                                       ? 'bg-purple-200 text-purple-800'
                                                       : t.status === 'Offered'
                                                           ? 'bg-blue-100 text-blue-800'
-                                                          : t.status === 'Applied'
-                                                              ? 'bg-gray-100 text-gray-800'
+                                                          : t.status === 'Hired'
+                                                              ? 'bg-green-100 text-green-800'
                                                               : t.status === 'Rejected'
                                                                   ? 'bg-red-100 text-red-800'
                                                                   : 'bg-gray-100 text-gray-600'
