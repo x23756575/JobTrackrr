@@ -35,6 +35,7 @@ export default function ResumePage(): React.ReactElement {
     const [advice, setAdvice] = useState<string>('');
     const [result,setResult] = useState<string>('');
     const [aiLoading, setAiLoading] = useState<boolean>(false);
+    const [matchScore, setMatchScore] = useState<number>(0);
 
     const leftCircle = useRef<HTMLImageElement>(null);
     const middleCircle = useRef<HTMLImageElement>(null);
@@ -139,9 +140,11 @@ export default function ResumePage(): React.ReactElement {
             const response = await axios.post('http://192.168.1.4:8080/resume', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
-
+            console.log(response.data)
             setResumeData(response.data);
             calculateMessage(response.data);
+            setMatchScore(response.data.score)
+
             setHideFile(true);
             toast.success('Resume analyzed successfully!');
         } catch (err) {
@@ -609,9 +612,11 @@ Keep total response under 200 words. Be decisive, specific, and unapologetically
                         >
 
                             <motion.div whileHover={{scale:1.02}} className="lg:col-span-5 bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-8 border border-gray-200">
-                                <h2 className="text-3xl text-center font-bold mb-8 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                                <h2 className="text-3xl font-bold mb-8 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                                     Analysis Results
                                 </h2>
+                                <h1>"Hello", {matchScore}</h1>
+
 
                                 {resumeData && <ProgressBar data={resumeData} />}
 
