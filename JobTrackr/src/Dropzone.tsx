@@ -13,7 +13,13 @@ interface fileDesc {
 
 export default function Dropzone(): React.ReactElement {
     const dropzoneRef = useRef<DropzoneRef>(null);
+    const [results, showResults] = useState<boolean>(false);
     const [hovered, setHovered] = useState<boolean>(false);
+    const [score, setScore] = useState<number>(0);
+    const [improv, setImprov] = useState<string>('');
+    const [skills,setSkills] = useState<string[]>([]);
+    const [keys,setKeys] = useState<string[]>([]);
+
 
     const [form, setForm] = useState<fileDesc>({
         file: null,
@@ -32,6 +38,26 @@ export default function Dropzone(): React.ReactElement {
             file: acceptedFiles[0] || null,
         }));
     };
+    const formatText = (data: string): string => {
+        let result = "";
+        for (let i = 0; i < data.length; i++) {
+            // Check if current char is a digit and next char is '.' (start of bullet)
+            if (
+                i > 0 &&
+                /\d/.test(data[i]) &&
+                data[i + 1] === '.' &&
+                data[i - 1] !== '\n'
+            ) {
+                // Add newline before bullet
+                result += '\n';
+            }
+            result += data[i];
+        }
+        return result;
+    };
+
+
+
 
     const { getRootProps, getInputProps, acceptedFiles } = useDropzone({
         onDrop,
@@ -48,14 +74,76 @@ export default function Dropzone(): React.ReactElement {
             jobDesc: e.target.value,
         }));
     };
+    const prepend:string = "From the given keywords, select up to three technical skills relevant to the job role to people looking for jobs. Provide concise, professional bullet points on how to improve those skills in under 40 words and dont give summaries or examples. If fewer than three, say no skills found. Ignore non-technical topics."
+    const technicalSkillsList = [
+        // Programming Languages
+        "javascript", "typescript", "java", "python", "c", "c++", "c#", "go", "rust", "ruby", "swift", "kotlin",
+        "php", "perl", "scala", "haskell", "dart", "r", "bash", "shell", "matlab", "vba",
+
+        // Web Development
+        "html", "css", "scss", "sass", "less", "ejs", "handlebars",
+
+        // Frontend Frameworks
+        "react", "next.js", "vue", "nuxt.js", "angular", "svelte", "preact", "backbone", "ember",
+
+        // Backend Frameworks
+        "node.js", "express", "spring", "spring boot", "django", "flask", "rails", "laravel", "asp.net", "fastapi", "phoenix",
+
+        // Mobile Development
+        "react native", "flutter", "xamarin", "ionic", "cordova", "android", "ios", "swiftui", "jetpack compose",
+
+        // Databases
+        "mysql", "postgresql", "sqlite", "mongodb", "redis", "oracle", "mariadb", "dynamodb", "cassandra", "couchdb", "neo4j", "influxdb", "snowflake", "redshift",
+
+        // DevOps / Cloud
+        "docker", "kubernetes", "aws", "azure", "gcp", "terraform", "ansible", "chef", "puppet", "jenkins", "circleci", "travisci", "github actions", "gitlab ci", "openshift", "nomad", "packer", "helm",
+
+        // APIs & Protocols
+        "graphql", "rest", "soap", "grpc", "openapi", "swagger", "websocket", "http", "oauth", "jwt",
+
+        // Testing
+        "jest", "mocha", "chai", "junit", "pytest", "cypress", "selenium", "playwright", "enzyme", "karma", "rspec",
+
+        // Tools & Build Systems
+        "webpack", "vite", "babel", "esbuild", "gulp", "grunt", "rollup", "npm", "yarn", "pnpm", "make", "cmake",
+
+        // UI/UX & Design
+        "figma", "sketch", "xd", "photoshop", "illustrator", "invision", "zeplin", "storybook", "tailwind", "bootstrap", "material ui", "chakra ui",
+
+        // Version Control & Collaboration
+        "git", "github", "gitlab", "bitbucket", "svn",
+
+        // Data Science & Machine Learning
+        "pandas", "numpy", "scipy", "matplotlib", "seaborn", "scikit-learn", "tensorflow", "keras", "pytorch", "xgboost", "lightgbm", "statsmodels", "mlflow", "nltk", "spacy", "openai", "langchain",
+
+        // Data Engineering & Big Data
+        "hadoop", "spark", "hive", "pig", "airflow", "kafka", "flink", "beam", "databricks", "dbt",
+
+        // Monitoring & Logging
+        "prometheus", "grafana", "elk", "elasticsearch", "logstash", "kibana", "splunk", "new relic", "datadog", "sentry",
+
+        // Security
+        "owasp", "burp suite", "wireshark", "metasploit", "nmap", "hashicorp vault", "identity access management", "ssl", "tls",
+
+        // Other Technologies
+        "linux", "windows server", "macos", "powershell", "unix", "bash", "zsh",
+        "openstack", "vmware", "virtualbox", "vagrant",
+
+        // Project Management
+        "jira", "confluence", "trello", "notion", "asana", "monday", "slack", "microsoft teams",
+
+        // Miscellaneous
+        "etl", "data pipeline", "api development", "microservices", "monolith", "service mesh", "observability", "containerization", "infrastructure as code", "ci/cd"
+    ];
 
     const submitDropzone = async () => {
+        setKeys([])
+        setSkills([])
+
         if (!form.file) {
-            alert('Please select a file first');
             return;
         }
 
-        // Example upload with FormData
         const data = new FormData();
         data.append('file', form.file);
         data.append('jobDesc', form.jobDesc);
@@ -65,21 +153,59 @@ export default function Dropzone(): React.ReactElement {
                 method: 'POST',
                 body: data,
             });
-            const text = await response.text();
-            console.log(text);
+            const text = await response.json();
+            setKeys(text.matchedKeywords)
+            console.log(text.matchedKeywords)
+            for(let i = 0; i < text.missedKeywords.length; i++){
+                const keyword = text.missedKeywords[i];
+
+                if(  technicalSkillsList.includes(keyword) && keyword.trim().length > 3) {
+
+                    setSkills(prev => [...prev, keyword]);
+                }
+
+
+            }
+
+            if(text === ''){
+                console.log("empty")
+            }
+
             if (response.ok) {
-                alert('Upload successful');
+                setScore(text.score);
+                showResults(true);
+
+
+                    const response = await fetch("http://localhost:11434/api/generate", {
+                        method: "POST",
+                        headers: {
+                            "Content-type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            model: "mistral",
+                            prompt: prepend + text.missedKeywords,
+                            stream: false,
+                        }),
+                    })
+
+                    const aiResponse = await response.json();
+                    console.log(aiResponse.response);
+                    setImprov(aiResponse.response)
+
 
             } else {
-                alert('Upload failed');
+                console.log('Upload failed');
             }
         } catch (error) {
-            alert('Error uploading file');
+            console.log('Error uploading file');
         }
     };
 
     return (
         <>
+        {!results ? (
+            <>
             <h1 className="text-blue-500 font-medium text-2xl text-center  w-full mb-3">Resume Match analysis</h1>
             <div className="grid grid-cols-[auto_1fr] mb-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="none"
@@ -166,6 +292,7 @@ export default function Dropzone(): React.ReactElement {
                     </svg>
                     <h3 className="font-semibold text-black ml-1">Job Description</h3>
                 </div>
+
                 <div className="relative">
                 <textarea
                     id="jobDescription"
@@ -177,6 +304,8 @@ export default function Dropzone(): React.ReactElement {
                 />
                 </div>
             </div>
+
+
             <div className="flex justify-center">
                 <motion.button
                     onClick={submitDropzone}
@@ -198,5 +327,228 @@ export default function Dropzone(): React.ReactElement {
             <span className="text-gray-500 text-xs text-center">Our AI will analyze your resume against the job description and provide keyword matching, skills gap analysis, and tailored improvement suggestions.</span>
 
         </>
+    ):(
+            <>
+                <h1 className="text-blue-500 font-medium text-2xl text-center w-full mb-3">Resume match results</h1>
+
+                <div className="grid grid-cols-1 gap-6 mb-8">
+                    {/* Match Score Section */}
+                    <div className="border rounded-xl p-6 shadow-sm">
+                        <h2 className="text-lg font-medium text-gray-800 mb-4">Overall Match Score</h2>
+                        <div className="flex items-center justify-between mb-2">
+                            <span className="text-gray-600">Match Percentage</span>
+                            <span className="text-blue-500 font-bold">{score}</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2.5">
+                            <div className="bg-blue-500 h-2.5 rounded-full" style={{width: `${score}%`}}></div>
+                        </div>
+                    </div>
+
+                    <div className="border rounded-xl p-6 shadow-sm">
+                        <h2 className="text-lg font-medium text-gray-800 mb-4">Key Skills Missing</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                     stroke="red" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                     className="lucide lucide-x-circle">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="15" y1="9" x2="9" y2="15"/>
+                                    <line x1="9" y1="9" x2="15" y2="15"/>
+                                </svg>
+                                <span className="text-gray-700">{skills[0]}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                     stroke="red" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                     className="lucide lucide-x-circle">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="15" y1="9" x2="9" y2="15"/>
+                                    <line x1="9" y1="9" x2="15" y2="15"/>
+                                </svg>
+                                <span className="text-gray-700">{skills[1]}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                     stroke="red" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                     className="lucide lucide-x-circle">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="15" y1="9" x2="9" y2="15"/>
+                                    <line x1="9" y1="9" x2="15" y2="15"/>
+                                </svg>
+                                <span className="text-gray-700">{skills[2]}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                     stroke="red" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                     className="lucide lucide-x-circle">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="15" y1="9" x2="9" y2="15"/>
+                                    <line x1="9" y1="9" x2="15" y2="15"/>
+                                </svg>
+                                <span className="text-gray-700">{skills[3]}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                     stroke="red" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                     className="lucide lucide-x-circle">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="15" y1="9" x2="9" y2="15"/>
+                                    <line x1="9" y1="9" x2="15" y2="15"/>
+                                </svg>
+                                <span className="text-gray-700">{skills[4]}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                     stroke="red" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                     className="lucide lucide-x-circle">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="15" y1="9" x2="9" y2="15"/>
+                                    <line x1="9" y1="9" x2="15" y2="15"/>
+                                </svg>
+                                <span className="text-gray-700">{skills[5]}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="border rounded-xl p-6 shadow-sm">
+                        <h2 className="text-lg font-medium text-gray-800 mb-4">Suggested Improvements</h2>
+                        <ul className="list-disc pl-6 space-y-2 text-gray-700 text-left font-comic">
+                            {formatText(improv)}
+
+                        </ul>
+                    </div>
+
+                    <div className="border rounded-xl p-6 shadow-sm">
+                        <h2 className="text-lg font-medium text-gray-800 mb-4">Your key skills</h2>
+                        <div className="space-y-4">
+                            <div>
+                                <div className="flex items-center justify-between">
+                                    <div className="flex justify-center items-center  ">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                             stroke="green" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                             className="lucide lucide-check-circle">
+                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                            <polyline points="22 4 12 14.01 9 11.01"/>
+                                        </svg>
+                                        <span className="text-gray-600 ml-2">{keys[0]}</span>
+                                        </div>
+                                </div>
+
+                            </div>
+                            <div>
+                                <div className="flex items-center justify-between">
+                                    <div className="flex justify-center items-center ">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                             stroke="green" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                             className="lucide lucide-check-circle">
+                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                            <polyline points="22 4 12 14.01 9 11.01"/>
+                                        </svg>
+                                        <span className="text-gray-600 ml-2">{keys[1]}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div className="flex items-center justify-between mb-2">
+                                    <div className="flex justify-center items-center ">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                             stroke="green" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                             className="lucide lucide-check-circle">
+                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                            <polyline points="22 4 12 14.01 9 11.01"/>
+                                        </svg>
+                                        <span className="text-left text-gray-600 ml-2">{keys[2]}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="flex justify-center space-x-4 mb-8">
+                    <motion.button
+                        whileHover={{scale:1.02}}
+                        whileTap={{scale:0.98}}
+                        onClick={() => showResults(false)}
+
+                        className="bg-blue-500 font-bold text-white p-2 px-4 rounded-md flex items-center justify-center gap-2"
+                    >
+                        Try Another Resume
+                    </motion.button>
+
+
+                </div>
+
+                <div className="border rounded-xl p-6 shadow-sm mb-6">
+                    <h2 className="text-lg font-medium text-gray-800 mb-4">Resume Optimization Tips <span className="text-xs text-gray-500">from<span> jobtrackr</span></span></h2>
+                    <p className="text-gray-600 mb-4">Based on common patterns, here are a few ways to improve your resume:</p>
+                    <div className="space-y-3">
+                        <div className="flex items-start gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                 stroke="blue" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                 className="lucide lucide-lightbulb mt-1">
+                                <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/>
+                                <path d="M9 18h6"/>
+                                <path d="M10 22h4"/>
+                            </svg>
+                            <p className="text-gray-700">Tailor your resume to each job by using relevant keywords from the job description  </p>
+                        </div>
+                        <div className="flex items-start gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                 stroke="blue" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                 className="lucide lucide-lightbulb mt-1">
+                                <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/>
+                                <path d="M9 18h6"/>
+                                <path d="M10 22h4"/>
+                            </svg>
+                            <p className="text-gray-700">Highlight technical skills clearly in a separate Skills section  </p>
+                        </div>
+                        <div className="flex items-start gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                 stroke="blue" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                 className="lucide lucide-lightbulb mt-1">
+                                <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/>
+                                <path d="M9 18h6"/>
+                                <path d="M10 22h4"/>
+                            </svg>
+                            <p className="text-gray-700">Emphasize accomplishments over responsibilities — use metrics and impact when possible  </p>
+                        </div>
+                        <div className="flex items-start gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                 stroke="blue" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                 className="lucide lucide-lightbulb mt-1">
+                                <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/>
+                                <path d="M9 18h6"/>
+                                <path d="M10 22h4"/>
+                            </svg>
+                            <p className="text-gray-700">Use active, clear language and keep formatting clean and consistent </p>
+                        </div>
+                        <div className="flex items-start gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                 stroke="blue" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                 className="lucide lucide-lightbulb mt-1">
+                                <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/>
+                                <path d="M9 18h6"/>
+                                <path d="M10 22h4"/>
+                            </svg>
+                            <p className="text-gray-700">Include relevant certifications, projects, or contributions (e.g. GitHub, open source) </p>
+                        </div>
+                        <div className="flex items-start gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                 stroke="blue" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                 className="lucide lucide-lightbulb mt-1">
+                                <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/>
+                                <path d="M9 18h6"/>
+                                <path d="M10 22h4"/>
+                            </svg>
+                            <p className="text-gray-700">and finally, proof read for grammar and clarity 😊</p>
+                        </div>
+                    </div>
+                </div>
+
+                <span className="text-gray-500 text-xs text-center block mb-6">This analysis is powered by AI and compares your resume's content and structure against the specific requirements in the job description.</span>
+            </>
+        )}
+    </>
     );
 }
