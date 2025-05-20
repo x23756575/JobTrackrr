@@ -612,11 +612,15 @@ Keep total response under 200 words. Be decisive, specific, and unapologetically
                         >
 
                             <motion.div whileHover={{scale:1.02}} className="lg:col-span-5 bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-8 border border-gray-200">
-                                <h2 className="text-3xl font-bold mb-8 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                                    Analysis Results
-                                </h2>
-                                <h1>"Hello", {matchScore}</h1>
-
+                                <div className="grid grid-cols-[auto_1fr] items-center gap-4">
+                                        <span className="text-4xl font-extrabold mb-8 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent drop-shadow-md">
+                                          Analysis Results
+                                        </span>
+                                                                        <span className="text-xl text-center font-medium ml-4 text-gray-600 leading-snug max-w-md">
+                                          Your <span className="font-bold text-indigo-600">RESUME</span> matched{' '}
+                                                                            <span className={`font-bold ${matchScore < 40 ? 'text-red-500' : 'text-green-500'}`}>{matchScore}%</span> of TECH resumes
+                                        </span>
+                                </div>
 
                                 {resumeData && <ProgressBar data={resumeData} />}
 
