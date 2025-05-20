@@ -37,6 +37,7 @@ export default function ResumePage(): React.ReactElement {
     const [aiLoading, setAiLoading] = useState<boolean>(false);
     const [matchScore, setMatchScore] = useState<number>(0);
 
+
     const leftCircle = useRef<HTMLImageElement>(null);
     const middleCircle = useRef<HTMLImageElement>(null);
     const rightCircle = useRef<HTMLImageElement>(null);
@@ -647,7 +648,9 @@ Keep total response under 200 words. Be decisive, specific, and unapologetically
                             <div className="lg:col-span-3">
                                 <motion.div
                                     className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-8 border border-gray-200"
-                                    whileHover={{ scale: 1.02 }}
+
+
+
                                 >
                                     <div className="text-center mb-6">
                                         <motion.img

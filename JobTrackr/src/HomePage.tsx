@@ -17,7 +17,7 @@ export default function Home() {
 
 
     return (
-        <div className="min-h-screen bg-gray-50 h-full overflow-hidden">
+        <div className="min-h-screen bg-gray-50 h-full overflow-y-auto">
             {/* Navbar */}
             <nav className="bg-white shadow-sm relative">
                 <div className="max-w-7xl mx-auto px-4 py-4 flex items-center">
@@ -33,7 +33,7 @@ export default function Home() {
             </nav>
 
             {/* Grid Section */}
-            <div className="grid grid-cols-[1fr_1.5fr_1fr] mt-4 mb-2 gap-4 h-[calc(100vh-100px)]">
+            <div className="grid grid-cols-[1fr_1.5fr_1fr] overflow-y-auto mt-4 mb-2 gap-4 h-[calc(100vh-100px)]">
                 <div className="bg-red-500 p-4 rounded text-white h-full">1</div>
                 <div className="bg-white p-4 rounded text-white"><Dropzone/></div>
                 <div className="bg-gray-100 p-4 rounded shadow-md">
