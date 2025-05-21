@@ -39,6 +39,40 @@ const ProgressBar = ({ data }: { data: ResumeData }) => {
             ></div>
         </div>
     );
+}
+export const ResultsBar = ({data}: {data:number}) => {
+
+    const [score,setScore] = useState<number>(0);
+
+    useEffect(() => {
+        const delay = 500;
+        const timer = setInterval(() => {
+
+
+            setScore(Number(data.toFixed(1)));
+
+        },delay)
+        return () => clearInterval(timer);
+    },[data]);
+
+
+
+    return (
+        <div className="relative w-full bg-[#e0e0e0] rounded-2xl">
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-black font-semibold transition-all duration-500">
+                {score}
+            </div>
+
+            <div className="transition-all duration-2000"
+                 style={{
+                     height: '30px',
+                     width: `${score}%`,
+                     backgroundColor: '#3b82f6',
+                     borderRadius: '4px',
+                 }}
+            ></div>
+        </div>
+    );
 
 
 }
