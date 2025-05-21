@@ -7,6 +7,7 @@ import Dropzone from "./Dropzone.tsx"
 import axios from "axios";
 import * as cheerio from "cheerio";
 import {useEffect} from "react";
+import { motion } from 'framer-motion';
 
 
 export default function Home() {
@@ -17,7 +18,7 @@ export default function Home() {
 
 
     return (
-        <div className="min-h-screen bg-gray-50 h-full overflow-y-auto">
+        <div className="min-h-screen bg-white h-full overflow-y-auto overflow-x-hidden">
             {/* Navbar */}
             <nav className="bg-white shadow-sm relative">
                 <div className="max-w-7xl mx-auto px-4 py-4 flex items-center">
@@ -42,25 +43,41 @@ export default function Home() {
                     <Dropzone/>
                 </div>
                 {/*third div*/}
-                <div className="bg-gray-100 p-4 rounded shadow-md">
-                    <header className="font-bebas tracking-wide text-center text-blue-600 text-4xl p-3 rounded-xl">
-                        Scan your resume
+                <div className="bg-white p-4 rounded-xl shadow-lg h-full flex flex-col gap-4 animate-fade-in">
+                    <header className="font-medium tracking-wide text-center text-blue-600 text-2xl">
+                        Smart Resume Scanner
                     </header>
-                    <div className="text-gray-700 text-center">
-                        <span>Receive a full custom-tailored analysis of your resume</span>
-                        <br/>
-                        <div onClick={() => navigate('/scan')}  className="bg-blue-500 text-center hover:bg-blue-500 transition-colors duration-300 rounded-md py-2 mt-3">
-                            <button className="text-3xl text-gray-600">Click here</button>
-                            <div className="flex justify-start">
-                                <img className={imageCSS}
-                                     src={pdf}/>
-                                <img className={imageCSS}
-                                     src={docx}/>
-                                <span className="text-gray-600 text-xs mt-1 ml-1 p-0">supported</span>
-                            </div>
+                    <motion.div
+                        onClick={() => navigate('/scan')}
+                        whileHover={{scale:1.02}}
+                        whileTap={{scaleX:0.9,scaleY:0.97}}
+                        className="cursor-pointer bg-[#50A2FF] text-white font-semibold shadow-xl text-lg text-center py-3 rounded-md mt-6 hover:opacity-90 transition duration-300"
+                    >
+                        Scan My Resume
+                        <div className="flex justify-center items-center gap-2 mt-2">
+                            <span className="text-xs text-gray-600">pdf, doc and docx supported</span>
                         </div>
+                    </motion.div>
+
+                    <div className="grid grid-cols-2 gap-4 mt-2">
+                        {[
+                            { title: "Experience Match", color: "bg-blue-50", icon: "💼",desc: "Compares your experience against relevant job listings for precise matching"},
+                            { title: "Skill Coverage", color: "bg-green-50", icon: "🛠️",desc: "Analyzes your skills across 50+ job descriptions for comprehensive extraction" },
+                            { title: "Formatting Score", color: "bg-yellow-50", icon: "🧾",desc: "Evaluates resume formatting using advanced parsing techniques" },
+                            { title: "Keyword Optimization", color: "bg-purple-50", icon: "🔍",desc: "Keyword optimization powered by Stanford CoreNLP" },
+                        ].map((card, idx) => (
+                            <div
+                                key={idx}
+                                className={`rounded-xl p-4 ${card.color} shadow-md hover:shadow-xl transition-transform hover:scale-[1.03] duration-300`}
+                            >
+                                <div className="text-3xl">{card.icon}</div>
+                                <div className="mt-2 text-lg font-semibold text-gray-800">{card.title}</div>
+                                <p className="text-sm text-gray-500 mt-1">{card.desc}</p>
+                            </div>
+                        ))}
                     </div>
                 </div>
+
 
             </div>
         </div>

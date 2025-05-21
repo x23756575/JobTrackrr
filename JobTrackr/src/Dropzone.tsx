@@ -4,6 +4,7 @@ import { useDropzone, type DropzoneRef } from 'react-dropzone';
 import {ResultsBar} from "./ProgressBar.tsx";
 import { Player } from '@lottiefiles/react-lottie-player';
 import './App.css';
+import gsap from 'gsap';
 
 interface FileWithPath extends File {
     path?: string;
@@ -23,6 +24,113 @@ export default function Dropzone(): React.ReactElement {
     const [skills,setSkills] = useState<string[]>([]);
     const [keys,setKeys] = useState<string[]>([]);
     const [loading, isLoading] = useState<boolean>(false);
+    const [imLoading, setImLoading] = useState<boolean>(false);
+    const [done, setDone] = useState<boolean>(false);
+
+    const sending = useRef(null);
+    const your = useRef(null);
+    const data = useRef( null);
+    const to = useRef(null);
+    const the = useRef(null);
+    const multiverse = useRef(null);
+
+    useEffect(() => {
+        if (imLoading) {
+            console.log("Animation should start - loading state is true");
+
+            setTimeout(() => {
+                if (sending.current && your.current && data.current &&
+                    to.current && the.current && multiverse.current) {
+
+                    console.log("Refs found, starting animation");
+
+                    gsap.set([sending.current, your.current, data.current,
+                        to.current, the.current, multiverse.current], {
+                        y: 0,
+                        opacity: 1,
+                        position: 'relative'
+                    });
+
+                    gsap.to(sending.current, {
+                        y: '-100vh',
+                        x: '-600',
+                        fontSize: "50px",
+                        rotation:360,
+                        opacity: 1,
+                        duration: 4,
+                        ease: "circ.out",
+                        delay: 0.1
+                    });
+
+                    gsap.to(your.current, {
+                        y: '-100vh',
+                        x: '-300',
+                        fontSize: "50px",
+                        rotation:360,
+                        opacity: 1,
+                        duration: 4,
+                        ease: "circ.out",
+                        delay: 0.3
+                    });
+
+                    gsap.to(data.current, {
+                        y: '-100vh',
+                        x: '45',
+                        fontSize: "50px",
+                        rotation:360,
+                        opacity: 1,
+                        duration: 4,
+                        ease: "circ.out",
+                        delay: 0.3
+                    });
+
+                    gsap.to(to.current, {
+                        y: '-100vh',
+                        x: '450',
+                        fontSize: "50px",
+                        rotation:360,
+                        opacity: 1,
+                        duration: 4,
+                        ease: "circ.out",
+                        delay: 0.3
+                    });
+
+                    gsap.to(the.current, {
+                        y: '-100vh',
+                        x: '600',
+                        fontSize: "50px",
+                        rotation:360,
+                        opacity: 1,
+                        duration: 4,
+                        ease: "circ.out",
+                        delay: 0.3
+                    });
+
+                    gsap.to(multiverse.current, {
+                        y: '-100vh',
+                        x: '900',
+                        fontSize: "50px",
+                        rotation:360,
+                        opacity: 1,
+                        duration: 4,
+                        ease: "power2.out",
+                        delay: 0.3
+                    });
+                } else {
+                    console.error("Animation refs missing:", {
+                        sending: sending.current,
+                        your: your.current,
+                        data: data.current,
+                        to: to.current,
+                        the: the.current,
+                        multiverse: multiverse.current
+                    });
+                }
+            }, 3500);
+        }
+
+    }, [imLoading]);
+
 
     const initialState: fileDesc ={
         file: null,
@@ -49,14 +157,12 @@ export default function Dropzone(): React.ReactElement {
     const formatText = (data: string): string => {
         let result = "";
         for (let i = 0; i < data.length; i++) {
-            // Check if current char is a digit and next char is '.' (start of bullet)
             if (
                 i > 0 &&
                 /\d/.test(data[i]) &&
                 data[i + 1] === '.' &&
                 data[i - 1] !== '\n'
             ) {
-                // Add newline before bullet
                 result += '\n';
             }
             result += data[i];
@@ -148,6 +254,8 @@ export default function Dropzone(): React.ReactElement {
         setKeys([])
         setSkills([])
         isLoading(true)
+        setImLoading(true)
+        setDone(false)
 
         if (!form.file) {
             isLoading(false);
@@ -185,7 +293,9 @@ export default function Dropzone(): React.ReactElement {
             if (response.ok) {
                 setScore(text.score);
                 showResults(true);
-                isLoading(false);
+                console.log("test 1")
+                isLoading(true);
+                setImLoading(true);
 
 
                     const response = await fetch("http://localhost:11434/api/generate", {
@@ -200,10 +310,19 @@ export default function Dropzone(): React.ReactElement {
                             stream: false,
                         }),
                     })
+                    if(response.ok){
+                        setImLoading(false);
+                        setDone(true);
+                    }
 
                     const aiResponse = await response.json();
+                    if(aiResponse){
+                        setImLoading(false)
+                        setDone(true);
+                    }
                     console.log(aiResponse.response);
                     setImprov(aiResponse.response)
+                    setDone(prev => !prev)
 
 
             } else {
@@ -364,7 +483,11 @@ export default function Dropzone(): React.ReactElement {
                     </div>
 
                     <div className="border rounded-xl p-6 shadow-sm">
-                        <h2 className="text-lg font-medium text-gray-800 mb-4">Key Skills Missing</h2>
+                        <div className="flex justify-self-auto gap-35" >
+                            <h2 className="text-lg font-medium text-gray-800 mb-4">Your skills</h2>
+                            <h2 className="text-lg font-medium text-gray-800 mb-4">Missing skills</h2>
+                        </div>
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="flex items-center gap-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
@@ -385,6 +508,7 @@ export default function Dropzone(): React.ReactElement {
                                 </svg>
                                 <span className="text-gray-700">{skills[1]}</span>
                             </div>
+
                             <div className="flex items-center gap-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                                      stroke="green" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -428,10 +552,23 @@ export default function Dropzone(): React.ReactElement {
 
                     <div className="border rounded-xl p-6 shadow-sm">
                         <h2 className="text-lg font-medium text-gray-800 mb-4">Suggested Improvements</h2>
-                        <ul className="list-disc pl-6 space-y-2 text-gray-700 text-left font-comic">
-                            {formatText(improv)}
+                        {!imLoading ? (
+                            <ul className="list-disc pl-6 space-y-2 text-gray-700 text-left font-comic">
+                                {formatText(improv)}
+                            </ul>
+                        ) : (
+                            <div className="w-full text-center p-4" style={{ position: 'static', overflow: 'visible' }}>
 
-                        </ul>
+                                <div className="flex justify-center space-x-2" style={{ position: 'relative', height: '40px', overflow: 'visible' }}>
+                                    <span ref={sending} className="z-30 text-gray-400" style={{ position: 'relative', display: 'inline-block' }}>sending</span>
+                                    <span ref={your} className="z-30 text-gray-400" style={{ position: 'relative', display: 'inline-block' }}>your</span>
+                                    <span ref={data} className="z-30 text-gray-400" style={{ position: 'relative', display: 'inline-block' }}>data</span>
+                                    <span ref={to} className="z-30 text-gray-400" style={{ position: 'relative', display: 'inline-block' }}>to</span>
+                                    <span ref={the} className="z-30 text-gray-400" style={{ position: 'relative', display: 'inline-block' }}>the</span>
+                                    <span ref={multiverse} className="text-gray-400" style={{ position: 'relative', display: 'inline-block' }}>multiverse</span>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
 

@@ -73,3 +73,6 @@
         transform: translate(calc(100% / 3));
     }
 }
+html, body {
+    overflow-x: hidden;
+}
