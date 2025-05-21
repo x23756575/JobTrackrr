@@ -47,11 +47,11 @@
     content: "";
     width: 200%;
     background:
-            linear-gradient(90deg, #3b82f6 50%, #0000 0), /* blue 50% then transparent */
+            linear-gradient(90deg, #3b82f6 50%, #0000 0),
             conic-gradient(from -90deg at var(--s) calc(0.353 * var(--s)),
-            #3b82f6 135deg, /* blue */
-            #000 0 270deg,  /* black */
-            #1e293b 0);     /* dark blue/black */
+            #3b82f6 135deg,
+            #000 0 270deg,
+            #1e293b 0);
     background-blend-mode: multiply;
     --_m:
             linear-gradient(to bottom right,
