@@ -7,8 +7,11 @@ import bg from './assets/jbg.png';
 import blur from'./assets/blur.png';
 import robot from './assets/robot.png';
 import { ScrollTrigger} from 'gsap/ScrollTrigger';
+import SplitText from 'gsap/SplitText';
+import { TextPlugin } from 'gsap/TextPlugin';
 import { motion } from 'framer-motion';
 import google from "./assets/google.png"
+
 
 const faqs = [
     {
@@ -69,12 +72,18 @@ const faqs = [
 ];
 
 export default function Landing() {
+
     const leftCard = useRef(null);
     const rightCard = useRef(null);
     const thirdCenterCard = useRef(null);
-    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.registerPlugin(ScrollTrigger,SplitText,TextPlugin);
 
     const jb = useRef(null);
+    const your = useRef(null)
+    const hunt = useRef(null)
+    const wit = useRef(null);
+    const img = useRef(null);
 
     const tl = gsap.timeline();
     const [openIndexes, setOpenIndexes] = useState<number[]>([]);
@@ -86,27 +95,95 @@ export default function Landing() {
             setOpenIndexes([...openIndexes, index]);
         }
     };
-
     useEffect(() => {
+
         const isMobile = window.innerWidth < 768;
 
+        if (!jb.current || !your.current){
+            console.log(your.current, your, "doesnt exist")
+        }
+        tl.fromTo(
+            jb.current,
+            { y: -300 },
+            {
+                y: 0,
+                duration: 2,
+                ease: 'bounce.out',
+                scaleX: 1,
+                scaleY: 1,
+                transformOrigin: 'center bottom',
+            }
+        );
 
-            gsap.fromTo(
-                jb.current,
-                { y: -300 },
-                {
-                    y: 0,
-                    duration: 2,
-                    ease: 'bounce.out',
-                    scaleX: 1,
-                    scaleY: 1,
-                    transformOrigin: 'center bottom',
-                }
-            );
+        tl.to(your.current, {
+            scaleY: 0.8,
+            duration: 0.3,
+            transformOrigin: "bottom center",
+            ease: "elastic.out(1,.4)"
+        },.6)
+        .to(your.current, {
+            scaleY: 1,
+            duration: 1,
+            ease: "back.out(5)",
+            color:"#7942FD"
+        },.7)
+        .to(wit.current,{
 
-            tl.to(jb.current, { rotation:25 }, "jb+=.2");
-            tl.to(jb.current, { rotation:0,duration:3, ease: "elastic.out" }, "jb+=1.4" );
-            tl.to(jb.current, {duration:3, color: "blue",   textShadow: "0px 0px 12px rgba(59, 130, 246, .2)"}, "jb+=2.2" );
+            delay:1,
+            duration:.4,
+            text:"",
+            ease:"sine.inOut"
+        },.4)
+        .set(img.current, { display: "block" }, ">")
+        .fromTo(
+            img.current,
+            { x:-650,opacity:0 },
+            {
+                x: 0,
+                duration: 1.7,
+                opacity:1,
+                transformOrigin: "right center",
+                ease: "elastic.out(1,.9)"
+            },
+            1.5
+        );
+        SplitText.create(hunt.current, {
+            type: "chars",
+            onSplit(self) {
+                gsap.from(self.chars, {
+                    delay:.8,
+                    duration: .1,
+                    y: -100,
+                    autoAlpha: 1,
+                    stagger: .3
+
+                });
+            }
+        });
+
+        // tl.to(your.current, {y: 0,scaleY:1,rotation:0, duration: 1.5, ease: "elastic.out"},1.5);
+
+            tl.to(jb.current, { rotation:25 }, .3);
+            tl.to(jb.current, { rotation:0,duration:4, ease: "elastic.out" },1.5 );
+            tl.to(jb.current, {duration:3, color: "blue",   textShadow: "0px 0px 12px rgba(59, 130, 246, .2)"});
+
+
+            // gsap.fromTo(
+            //     jb.current,
+            //     { y: -300 },
+            //     {
+            //         y: 0,
+            //         duration: 2,
+            //         ease: 'bounce.out',
+            //         scaleX: 1,
+            //         scaleY: 1,
+            //         transformOrigin: 'center bottom',
+            //     }
+            // );
+            //
+            // tl.to(jb.current, { rotation:25 }, "jb+=.2");
+            // tl.to(jb.current, { rotation:0,duration:3, ease: "elastic.out" }, "jb+=1.4" );
+            // tl.to(jb.current, {duration:3, color: "blue",   textShadow: "0px 0px 12px rgba(59, 130, 246, .2)"}, "jb+=2.2" );
 
     }, []);
 
@@ -134,9 +211,16 @@ export default function Landing() {
             <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 pb-0 md:py-12">
                 <section className="flex flex-col text-center">
                     <h1 className="flex flex-col items-center text-3xl md:text-5xl lg:text-6xl font-bold text-gray-800">
-                        <span className="mb-2">Simplify <span >Your </span> <span>Hunt</span></span>
+                        <span className="mb-2">Simplify <span ref={your} className="inline-block">Your </span> <span className="inline-block" ref={hunt}>Hunt</span></span>
                         <span className="flex items-center gap-2 mb-3">
-                          With <span ref={jb} className="bg-gradient-to-r from-indigo-600 to-purple-500 text-transparent bg-clip-text p-1 transform -rotate-1">JobTrackr</span>
+                            <span ref={wit} className="inline-block">with</span><span className="mt-2" ><svg ref={img} style={{ display: "none" }} xmlns="http://www.w3.org/2000/svg"
+                                                                                           width="60" height="60" viewBox="0 0 24 24"
+                                                                                           fill="none" stroke="currentColor"
+                                                                                           stroke-width="2" stroke-linecap="round"
+                                                                                           stroke-linejoin="round"
+                                                                                           className="lucide lucide-arrow-right-icon lucide-arrow-right"><path
+                            d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span> <span ref={jb}
+                                                                                           className="bg-gradient-to-r from-indigo-600 to-purple-500 text-transparent bg-clip-text p-1 transform -rotate-1">JobTrackr</span>
                         </span>
                         <span className="flex justify-center items-center text-2xl md:text-3xl mb-6 font-normal gap-2">
                             Track
@@ -164,7 +248,7 @@ export default function Landing() {
                     </h1>
 
 
-                        <motion.div className="flex justify-center w-full mt-8 bg-white"
+                        <motion.div className="flex justify-center w-full mt-8 bg-white mb-6  md:mb-1"
                             whileHover={{scale:1.02}}
                             whileTap={{scale:0.98}}
                             >
@@ -182,9 +266,8 @@ export default function Landing() {
             </main>
 
             <div className=" px-4 sm:px-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 px-15">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 px-15 mb-20">
                     <div
-                        ref={leftCard}
                         className="bg-white p-6 rounded-xl shadow border border-gray-100 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
                     >
                         <div
@@ -237,7 +320,6 @@ export default function Landing() {
                     </div>
 
                     <div
-                        ref={rightCard}
                         className="bg-white p-6 rounded-xl shadow border border-gray-100 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
                     >
                         <div
@@ -272,15 +354,139 @@ export default function Landing() {
                     </div>
                 </div>
             </div>
+            <div className="grid grid-cols-1  md:grid-cols-[1fr_1fr] gap-7 justify-center h-70 md:w-[calc(100%-180px)] px-20 mx-auto mt-4 mb-18">
+
+                <motion.div className="p-[.15rem] rounded-lg bg-gradient-to-r from-gray-500 to-gray-700 "
+                    whileHover={{scale: 1.02,animationDuration:2}}
+                >
+                    <div className="bg-white rounded-md p-6 h-full px-3.5 py-2.5n   dark:hover:bg-slate-100 shadow relative before:absolute before:inset-0 before:rounded-[inherit] before:bg-[linear-gradient(45deg,transparent_25%,theme(colors.white/.5)_50%,transparent_75%,transparent_100%)] dark:before:bg-[linear-gradient(45deg,transparent_25%,theme(colors.white)_50%,transparent_75%,transparent_100%)] before:bg-[length:250%_250%,100%_100%] before:bg-[position:200%_0,0_0] before:bg-no-repeat before:[transition:background-position_0s_ease] hover:before:bg-[position:-100%_0,0_0] hover:before:duration-[1500ms]">
+                        <h1 className="text-left text-white font-semibold bg-gradient-to-r from-gray-400 to-gray-600 rounded-4xl px-5 py-1 inline-block  ">Jobless
+                        </h1>
+                        <span className="ml-2 font-semibold text-md text-gray-500">Start applying with 'confidence'</span>
+                        <p className="text-5xl font-bold bg-gradient-to-r from-gray-600 to-gray-800 text-transparent bg-clip-text my-3 ml-1">FREE</p>
+
+                        <span className="flex justify-start mb-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black"
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-check-icon lucide-check mr-1"><path
+                                d="M20 6 9 17l-5-5"/>
+                            </svg>
+                               <span
+                                   className="text-transparent bg-gradient-to-r from-gray-700 to-gray-800 bg-clip-text mr-1">Limit</span>of 5 file uploads!
+                        </span>
+                        <span className="flex justify-start mb-2 items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black"
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-check-icon lucide-check mr-1"><path
+                                d="M20 6 9 17l-5-5"/>
+                            </svg>
+                                Access to Resume-Job Description Comparison
+                       </span>
+                        <span className="flex justify-start mb-2">
+                               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-check-icon lucide-check mr-1"><path
+                                   d="M20 6 9 17l-5-5"/>
+                            </svg>
+                                Keep Track of Your Applications
+                       </span>
+                        <span className="flex justify-start mb-2">
+                               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black"
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-check-icon lucide-check mr-1"><path
+                                   d="M20 6 9 17l-5-5"/>
+                            </svg>
+                                Discord and email support
+                       </span>
+                        <span className="flex justify-start mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-check-icon lucide-check mr-1"><path
+                            d="M20 6 9 17l-5-5"/>
+                            </svg>
+                                Includes Jobless plan features
+                           </span>
+
+
+                    </div>
+                </motion.div>
+
+                <motion.div className="p-[.15rem] rounded-lg bg-gradient-to-r from-indigo-600 to-purple-500"
+                whileHover={{scale: 1.02,animationDuration:2}}
+                >
+                    <div className="bg-white rounded-md p-6 h-full    dark:hover:bg-slate-100 shadow relative before:absolute before:inset-0 before:rounded-[inherit] before:bg-[linear-gradient(45deg,transparent_25%,theme(colors.white/.5)_50%,transparent_75%,transparent_100%)] dark:before:bg-[linear-gradient(45deg,transparent_25%,theme(colors.white)_50%,transparent_75%,transparent_100%)] before:bg-[length:250%_250%,100%_100%] before:bg-[position:200%_0,0_0] before:bg-no-repeat before:[transition:background-position_0s_ease] hover:before:bg-[position:-100%_0,0_0] hover:before:duration-[1500ms]">
+                        <h1 className="text-left text-white font-semibold bg-gradient-to-r from-indigo-600 to-purple-500 rounded-4xl px-5 py-1 inline-block ">Employed
+                        </h1>
+                        <span className="ml-2 font-semibold text-md text-gray-500">Perfect to land a job!</span>
+                        <p className="text-5xl font-bold bg-gradient-to-r from-indigo-600 to-purple-500 text-transparent bg-clip-text my-3">€2.99</p>
+
+                        <span className="flex justify-start mb-2  ml-1">
+                               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="url(#indigoToPurple)" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" className="lucide lucide-check-icon lucide-check mr-1">
+                                  <path d="M20 6 9 17l-5-5"/>
+                                  <defs>
+                                    <linearGradient id="indigoToPurple" x1="0%" y1="0%" x2="100%" y2="0%">
+                                      <stop offset="0%" stop-color="#4f46e5"/>
+                                      <stop offset="100%" stop-color="#a855f7"/>
+                                    </linearGradient>
+                                  </defs>
+                               </svg>
+                               <span className="font-bold text-transparent bg-gradient-to-r from-indigo-800 to-blue-800 bg-clip-text mr-1">Unlimited</span>  file uploads!
+                        </span>
+                        <span className="flex justify-start mb-2 items-center ml-1">
+                               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="url(#indigoToPurple)" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" className="lucide lucide-check-icon lucide-check mr-1">
+                                  <path d="M20 6 9 17l-5-5"/>
+                                  <defs>
+                                    <linearGradient id="indigoToPurple" x1="0%" y1="0%" x2="100%" y2="0%">
+                                      <stop offset="0%" stop-color="#4f46e5"/>
+                                      <stop offset="100%" stop-color="#a855f7"/>
+                                    </linearGradient>
+                                  </defs>
+                               </svg>
+                                Access to AI assistant Jobi
+                           </span>
+                        <span className="flex justify-start mb-2 ml-1">
+                               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="url(#indigoToPurple)" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" className="lucide lucide-check-icon lucide-check mr-1">
+                                  <path d="M20 6 9 17l-5-5"/>
+                                  <defs>
+                                    <linearGradient id="indigoToPurple" x1="0%" y1="0%" x2="100%" y2="0%">
+                                      <stop offset="0%" stop-color="#4f46e5"/>
+                                      <stop offset="100%" stop-color="#a855f7"/>
+                                    </linearGradient>
+                                  </defs>
+                               </svg>
+                                Discord and email support
+                           </span>
+                        <span className="flex justify-start mb-2 ml-1">
+                               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="url(#indigoToPurple)" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" className="lucide lucide-check-icon lucide-check mr-1">
+                                  <path d="M20 6 9 17l-5-5"/>
+                                  <defs>
+                                    <linearGradient id="indigoToPurple" x1="0%" y1="0%" x2="100%" y2="0%">
+                                      <stop offset="0%" stop-color="#4f46e5"/>
+                                      <stop offset="100%" stop-color="#a855f7"/>
+                                    </linearGradient>
+                                  </defs>
+                               </svg>
+                                Includes Jobless plan features
+                           </span>
+
+
+                    </div>
+
+                </motion.div>
+
+            </div>
             <div className="w-[calc(100vw)]">
 
-                <div className="max-w-3xl mx-auto px-4 py-8">
-                    <h2 className="text-2xl font-bold mb-6 text-center">Frequently Asked Questions</h2>
+                <div className="max-w-3xl mx-auto px-5 py-8">
+                    <h2 className="text-2xl font-bold mb-6 text-center md:mt-20  mt-110">Frequently Asked Questions</h2>
                     <div className="space-y-4">
                         {faqs.map((faq, index) => (
                             <motion.div
-                                whileHover={{scale:1.02}}
-                                whileTap={{scale:.99999}}
+                                whileHover={{scale: 1.02}}
+                                whileTap={{scale: .99999}}
                                 key={index}
                                 className="border border-gray-200 rounded-lg p-4 shadow-sm"
                                 onClick={() => toggle(index)}
@@ -288,7 +494,7 @@ export default function Landing() {
                                 <button
                                     className="w-full text-left flex justify-between items-center text-blue-600 font-medium text-lg"
                                 >
-                                    {faq.question}
+                                {faq.question}
                                     <span className="ml-2">
                                     {openIndexes.includes(index) ? "−" : "+"}
                                   </span>
