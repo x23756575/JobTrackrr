@@ -16,6 +16,7 @@ interface formData {
     position:string;
     status:string;
     description:string;
+    interviewDate:string;
 }
 interface trackData{
     id:string;
@@ -24,6 +25,7 @@ interface trackData{
     status:string;
     description:string;
     date: string;
+    interviewDate:string;
 }
 interface editFormData{
     id:string;
@@ -31,6 +33,7 @@ interface editFormData{
     position:string;
     status:string;
     description:string;
+    interviewDate:string;
 }
 interface appStats{
     interviews:number;
@@ -44,14 +47,16 @@ const initialEditState: editFormData = {
     job: '',
     position: '',
     status: '',
-    description: ''
+    description: '',
+    interviewDate:''
 };
 
 const initialFormState: formData = {
     job: '',
     position: '',
     status: '',
-    description: ''
+    description: '',
+    interviewDate:''
 };
 
 export default function TrackPage(){
@@ -99,7 +104,6 @@ export default function TrackPage(){
     };
 
     useEffect(() => {
-
         gsap.fromTo(appData.current,
             {y: '-12vh', opacity: .5},
             {y: '0', opacity: 1, duration: 1.5, ease: 'back.out(1)'}
@@ -156,6 +160,7 @@ export default function TrackPage(){
             if(response.status === 200){
                 setHideForm(true)
                 setForm(initialFormState)
+
             }
             console.log(response.data)
         } catch (err) {
@@ -196,7 +201,6 @@ export default function TrackPage(){
                 setTrack(updated.data);
                 setDeleteId(null);
                 console.log("deleted")
-
                 console.log(track)
 
 
@@ -215,87 +219,97 @@ export default function TrackPage(){
                 backgroundSize: "cover",
                 backgroundPosition: "center",
             }}>
-                {/* Navigation Bar - z-index: 50 (highest) */}
                 <nav className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50 relative">
                     <div className="max-w-7xl mx-auto px-4 py-4">
                         <motion.span
                             initial={{opacity: 0}}
                             animate={{opacity: 1}}
-                            className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent text-center sm:text-left"
+                            className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent text-center sm:text-left"
                         >
                             JobTrackr
                         </motion.span>
-
-
                     </div>
                 </nav>
 
-                {/* Stats Cards - z-index: 30 */}
-                <div className="grid grid-cols-4 mx-auto gap-5 mt-6 w-[calc(100vw-150px)] mb-[50px] relative z-30">
+                <div className="grid grid-cols-2 sm:grid-cols-4 mx-auto gap-3 sm:gap-5 mt-6 px-4 sm:px-0 sm:w-[calc(100vw-150px)] mb-[30px] sm:mb-[50px] relative z-30">
                     <div className="bg-gradient-to-r from-[#FEFEFF] to-green-100 rounded-lg shadow">
-                        <p className="text-md p-4 text-gray-600">Jobs Landed</p>
-                        <p className="text-2xl text-green-700 font-bold ml-4 mb-4">{stats.hired}</p>
+                        <p className="text-sm sm:text-md p-3 sm:p-4 text-gray-600">Jobs Landed</p>
+                        <p className="text-xl sm:text-2xl text-green-700 font-bold ml-3 sm:ml-4 mb-3 sm:mb-4">{stats.hired}</p>
                     </div>
                     <div className="bg-gradient-to-r from-[#FEFEFF] to-purple-100 rounded-lg shadow">
-                        <p className="text-md p-4 text-gray-600">Interviews</p>
-                        <p className="text-2xl text-purple-500 font-bold ml-4 mb-4">{stats.interviews}</p>
+                        <p className="text-sm sm:text-md p-3 sm:p-4 text-gray-600">Interviews</p>
+                        <p className="text-xl sm:text-2xl text-purple-500 font-bold ml-3 sm:ml-4 mb-3 sm:mb-4">{stats.interviews}</p>
                     </div>
                     <div className="bg-gradient-to-r from-[#FEFEFF] to-blue-100 rounded-lg shadow">
-                        <p className="text-md p-4 text-gray-600">Offers</p>
-                        <p className="text-2xl text-indigo-600 font-bold ml-4 mb-4">{stats.offers}</p>
+                        <p className="text-sm sm:text-md p-3 sm:p-4 text-gray-600">Offers</p>
+                        <p className="text-xl sm:text-2xl text-indigo-600 font-bold ml-3 sm:ml-4 mb-3 sm:mb-4">{stats.offers}</p>
                     </div>
                     <div className="bg-gradient-to-r from-[#FEFEFF] to-red-100 rounded-lg shadow">
-                        <p className="text-md p-4 text-gray-600">Rejections</p>
-                        <p className="text-2xl text-red-600 font-bold ml-4 mb-4">{stats.rejections}</p>
+                        <p className="text-sm sm:text-md p-3 sm:p-4 text-gray-600">Rejections</p>
+                        <p className="text-xl sm:text-2xl text-red-600 font-bold ml-3 sm:ml-4 mb-3 sm:mb-4">{stats.rejections}</p>
                     </div>
                 </div>
 
-
-                <div className="grid grid-rows-[auto_1fr] w-[calc(100vw-150px)] h-[100vh] mx-auto relative z-20">
-                    {/* Form Section - z-index: 25 */}
-                    <div className={`flex justify-start items-center w-auto relative z-25 ${hideForm ? 'p-0' : 'p-4'}`}>
-                        <div className={`rounded-lg w-full ${!hideForm ? 'bg-white shadow-md p-6' : ''}`}>
+                {/* Main Content */}
+                <div className="flex flex-col px-4 sm:px-0 sm:w-[calc(100vw-150px)] min-h-[60vh] mx-auto relative z-20 pb-6">
+                    {/* Form Section */}
+                    <div className={`flex justify-start items-center w-full relative z-25 ${hideForm ? 'p-0' : 'p-4'} mb-4`}>
+                        <div className={`rounded-lg w-full ${!hideForm ? 'bg-white shadow-md p-4 sm:p-6' : ''}`}>
                             {!hideForm && (
                                 <form className="space-y-4" onSubmit={handleSubmit}>
-                                    <div className="flex flex-col">
-                                        <label htmlFor="job" className="text-sm font-medium text-gray-700 mb-1">Company</label>
-                                        <input
-                                            type="text"
-                                            id="job"
-                                            placeholder="Enter company name"
-                                            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                                            value={form.job}
-                                            onChange={(e) => setForm({...form, job:e.target.value})}
-                                            required
-                                        />
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div className="flex flex-col">
+                                            <label htmlFor="job" className="text-sm font-medium text-gray-700 mb-1">Company</label>
+                                            <input
+                                                type="text"
+                                                id="job"
+                                                placeholder="Enter company name"
+                                                className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                                value={form.job}
+                                                onChange={(e) => setForm({...form, job:e.target.value})}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <label htmlFor="position" className="text-sm font-medium text-gray-700 mb-1">Position</label>
+                                            <input
+                                                type="text"
+                                                id="position"
+                                                placeholder="Enter job position"
+                                                className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                                value={form.position}
+                                                onChange={(e) => setForm({...form, position:e.target.value})}
+                                                required
+                                            />
+                                        </div>
                                     </div>
-                                    <div className="flex flex-col">
-                                        <label htmlFor="position" className="text-sm font-medium text-gray-700 mb-1">Position</label>
-                                        <input
-                                            type="text"
-                                            id="position"
-                                            placeholder="Enter job position"
-                                            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                                            value={form.position}
-                                            onChange={(e) => setForm({...form, position:e.target.value})}
-                                            required
-                                        />
-                                    </div>
-                                    <div className="flex flex-col">
-                                        <label htmlFor="status" className="text-sm font-medium text-gray-700 mb-1">Status</label>
-                                        <select
-                                            id="status"
-                                            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                                            value={form.status}
-                                            onChange={(e) => setForm({...form, status:e.target.value})}
-                                            required
-                                        >
-                                            <option value="">No status</option>
-                                            <option className="font-bold text-green-600" value="Hired">Hired</option>
-                                            <option className="font-bold text-purple-500" value="Interviewing">Interviewing</option>
-                                            <option className="font-bold text-indigo-600" value="Offered">Offered</option>
-                                            <option className="font-bold text-red-600" value="Rejected">Rejected</option>
-                                        </select>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div className="flex flex-col">
+                                            <label htmlFor="status" className="text-sm font-medium text-gray-700 mb-1">Status</label>
+                                            <select
+                                                id="status"
+                                                className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                                value={form.status}
+                                                onChange={(e) => setForm({...form, status:e.target.value})}
+                                                required
+                                            >
+                                                <option value="">No status</option>
+                                                <option className="font-bold text-green-600" value="Hired">Hired</option>
+                                                <option className="font-bold text-purple-500" value="Interviewing">Interviewing</option>
+                                                <option className="font-bold text-indigo-600" value="Offered">Offered</option>
+                                                <option className="font-bold text-red-600" value="Rejected">Rejected</option>
+                                            </select>
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <label htmlFor="interviewDate" className="text-sm font-medium text-gray-700 mb-1">Interview date (if applicable)</label>
+                                            <input
+                                                id="interviewDate"
+                                                type="datetime-local"
+                                                placeholder="30"
+                                                className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                                onChange={(e) => setForm({...form, interviewDate:e.target.value})}
+                                            />
+                                        </div>
                                     </div>
                                     <div className="flex flex-col">
                                         <label htmlFor="description" className="text-sm font-medium text-gray-700 mb-1">Description</label>
@@ -310,26 +324,28 @@ export default function TrackPage(){
                                             required
                                         />
                                     </div>
-                                    <button
-                                        className="bg-blue-500 text-xs text-white p-3 px-5 mr-2 rounded-xl"
-                                        type="submit"
-                                    >
-                                        Track your application
-                                    </button>
-                                    <button
-                                        className="bg-gray-400 text-xs text-white p-3 px-5 rounded-xl"
-                                        onClick={cancelForm}
-                                        type="button"
-                                    >
-                                        Cancel
-                                    </button>
+                                    <div className="flex flex-col sm:flex-row gap-2">
+                                        <button
+                                            className="bg-blue-500 text-sm text-white p-3 px-5 rounded-xl flex-1 sm:flex-none"
+                                            type="submit"
+                                        >
+                                            Track your application
+                                        </button>
+                                        <button
+                                            className="bg-gray-400 text-sm text-white p-3 px-5 rounded-xl flex-1 sm:flex-none"
+                                            onClick={cancelForm}
+                                            type="button"
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
                                     {!error && <span className="">{error}</span>}
                                 </form>
                             )}
                             {hideForm && (
                                 <div className="flex justify-start mb-2 ml-1">
                                     <button
-                                        className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white mb-2 py-3 px-4 rounded-xl hover:opacity-90 transition-opacity font-medium"
+                                        className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white mb-2 py-3 px-4 rounded-xl hover:opacity-90 transition-opacity font-medium w-full sm:w-auto"
                                         onClick={() => setHideForm(prev => !prev)}
                                     >
                                         Add Application
@@ -339,46 +355,48 @@ export default function TrackPage(){
                         </div>
                     </div>
 
-                    <div className="bg-[#FEFEFF] overflow-auto rounded-lg shadow relative">
+                    <div className="bg-[#FEFEFF] overflow-hidden rounded-lg shadow relative flex-1">
                         <div className="w-full z-20 relative">
-                            <h1 className="bg-[linear-gradient(to_right,_#ecfdf5,_#f5f3ff,_#eff6ff,_#fef2f2)] font-semibold text-2xl border-b border-gray-200 p-3">Your applications</h1>
-                            <Link to="/calendar">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" viewBox="0 0 24 24" fill="none"
-                                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                     className="lucide lucide-calendar-range-icon lucide-calendar-range absolute top-2 right-7">
-                                    <rect width="18" height="18" x="3" y="4" rx="2"/>
-                                    <path d="M16 2v4"/>
-                                    <path d="M3 10h18"/>
-                                    <path d="M8 2v4"/>
-                                    <path d="M17 14h-6"/>
-                                    <path d="M13 18H7"/>
-                                    <path d="M7 14h.01"/>
-                                    <path d="M17 18h.01"/>
-                                </svg>
-                            </Link>
+                            <div className="flex justify-between items-center bg-[linear-gradient(to_right,_#ecfdf5,_#f5f3ff,_#eff6ff,_#fef2f2)] border-b border-gray-200 p-3">
+                                <h1 className="font-semibold text-xl sm:text-2xl">Your applications</h1>
+                                <Link to="/calendar">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24" fill="none"
+                                         stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                         className="lucide lucide-calendar-range-icon lucide-calendar-range sm:w-[45px] sm:h-[45px]">
+                                        <rect width="18" height="18" x="3" y="4" rx="2"/>
+                                        <path d="M16 2v4"/>
+                                        <path d="M3 10h18"/>
+                                        <path d="M8 2v4"/>
+                                        <path d="M17 14h-6"/>
+                                        <path d="M13 18H7"/>
+                                        <path d="M7 14h.01"/>
+                                        <path d="M17 18h.01"/>
+                                    </svg>
+                                </Link>
+                            </div>
                         </div>
 
-                        <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr] w-full bg-gray-50 p-3 pb-4 pl-10 relative z-10">
+                        <div className="hidden sm:grid grid-cols-5 w-full bg-gray-50 p-3 pb-4 pl-10 relative z-10">
                             <span className="text-left font-medium text-gray-500">Company</span>
                             <span className="text-left font-medium text-gray-500">Position</span>
                             <span className="text-left font-medium text-gray-500">Status</span>
                             <span className="text-left font-medium text-gray-500">Description</span>
-                            <span className="text-left font-medium text-gray-500">Date applied</span>
+                            <span className="text-left font-medium text-gray-500">Interview date</span>
                         </div>
 
-                        <div className="w-full p-3 pb-4 pl-10 relative z-5">
-                            <div ref={appData} className="grid [&>*:nth-child(odd)]:bg-gray-50 relative z-0">
+                        <div className="w-full p-3 pb-4 sm:pl-10 relative z-5 overflow-auto max-h-[60vh]">
+                            <div ref={appData} className="space-y-2 sm:space-y-0 sm:[&>*:nth-child(odd)]:bg-gray-50 relative z-0">
                                 {track?.map((t: trackData) => (
                                     trackId === t.id ? (
                                         <React.Fragment key={t.id}>
-                                            <form className="flex flex-wrap md:grid md:grid-cols-5 gap-2 bg-white p-4 rounded-2xl shadow" onSubmit={handleEdit}>
+                                            <form className="bg-white p-4 rounded-2xl shadow space-y-3 sm:space-y-0 sm:grid sm:grid-cols-5 sm:gap-2" onSubmit={handleEdit}>
                                                 <input
                                                     type="text"
                                                     name="company"
                                                     placeholder="Company"
                                                     value={editForm.job}
                                                     onChange={(e) => setEditForm({ ...editForm, job: e.target.value })}
-                                                    className="w-full md:w-auto p-2 border border-gray-300 rounded"
+                                                    className="w-full p-2 border border-gray-300 rounded"
                                                 />
                                                 <input
                                                     type="text"
@@ -386,13 +404,13 @@ export default function TrackPage(){
                                                     placeholder="Position"
                                                     value={editForm.position}
                                                     onChange={(e) => setEditForm({ ...editForm, position: e.target.value })}
-                                                    className="w-full md:w-auto p-2 border border-gray-300 rounded"
+                                                    className="w-full p-2 border border-gray-300 rounded"
                                                 />
                                                 <select
                                                     name="status"
                                                     value={editForm.status}
                                                     onChange={(e) => setEditForm({ ...editForm, status: e.target.value })}
-                                                    className="w-full md:w-auto p-2 border border-gray-300 rounded"
+                                                    className="w-full p-2 border border-gray-300 rounded"
                                                 >
                                                     <option value="">No status</option>
                                                     <option className="font-bold text-green-600" value="Hired">Hired</option>
@@ -406,12 +424,18 @@ export default function TrackPage(){
                                                     placeholder="Description"
                                                     value={editForm.description}
                                                     onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
-                                                    className="w-full md:w-auto p-2 border border-gray-300 rounded"
+                                                    className="w-full p-2 border border-gray-300 rounded"
                                                 />
-                                                <div className="flex justify-between items-center">
-                                                    <span className="text-gray-500">{formatDate(t.date)}</span>
+                                                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                                                    <input
+                                                        type="datetime-local"
+                                                        name="interviewDate"
+                                                        placeholder=""
+                                                        onChange={(e) => setEditForm({ ...editForm, interviewDate: e.target.value })}
+                                                        className="w-full sm:w-40 p-2 border border-gray-300 rounded"
+                                                    />
                                                     <button
-                                                        className="bg-gradient-to-r from-green-300 to-indigo-500 text-white py-1 px-3 rounded-xl hover:opacity-90 transition-opacity font-medium ml-2"
+                                                        className="bg-gradient-to-r from-green-300 to-indigo-500 text-white py-2 px-4 rounded-xl hover:opacity-90 transition-opacity font-medium"
                                                         type="submit"
                                                     >
                                                         Save
@@ -422,15 +446,81 @@ export default function TrackPage(){
                                     ) : (
                                         <div
                                             key={t.id}
-                                            className="flex flex-wrap md:grid md:grid-cols-5 mb-2 py-3 px-4 w-full rounded-2xl hover:bg-gray-50 gap-y-1"
+                                            className="bg-white sm:bg-transparent p-4 sm:p-0 rounded-2xl sm:rounded-none shadow sm:shadow-none sm:grid sm:grid-cols-5 mb-2 sm:mb-0 sm:py-3 sm:px-4 w-full sm:hover:bg-gray-50 space-y-2 sm:space-y-0 sm:gap-y-1 relative"
                                         >
-                                            <span className="w-full md:w-auto text-left font-bold text-gray-700">
+                                            <div className="sm:hidden space-y-2">
+                                                <div className="flex justify-between items-start">
+                                                    <div>
+                                                        <p className="text-xs text-gray-500 uppercase tracking-wide">Company</p>
+                                                        <span className="font-bold text-gray-700">{t.job}</span>
+                                                    </div>
+                                                    <div className="flex space-x-2">
+                                                        <img
+                                                            className="h-[17px] w-[17px] cursor-pointer"
+                                                            onClick={() => {
+                                                                setEditForm({
+                                                                    id: t.id,
+                                                                    job: t.job,
+                                                                    position: t.position,
+                                                                    status: t.status,
+                                                                    description: t.description,
+                                                                    interviewDate:t.interviewDate
+                                                                });
+                                                                setTrackId(t.id);
+                                                                setHideEdit(true)
+                                                            }}
+                                                            src={edit}
+                                                            alt="Edit"
+                                                        />
+                                                        <img
+                                                            className="h-[20px] w-[20px] cursor-pointer"
+                                                            src={abin}
+                                                            onClick={() => {setDeleteId(t.id);
+                                                                handleDelete(t.id);
+                                                            }}
+                                                            alt="Delete"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <p className="text-xs text-gray-500 uppercase tracking-wide">Position</p>
+                                                    <span className="text-gray-700">{t.position}</span>
+                                                </div>
+                                                <div>
+                                                    <p className="text-xs text-gray-500 uppercase tracking-wide">Status</p>
+                                                    <motion.div
+                                                        className={`text-xs font-medium py-2 px-3 inline-flex rounded-3xl ${
+                                                            t.status === 'Interviewing'
+                                                                ? 'bg-purple-200 text-purple-800'
+                                                                : t.status === 'Offered'
+                                                                    ? 'bg-blue-100 text-blue-800'
+                                                                    : t.status === 'Hired'
+                                                                        ? 'bg-green-100 text-green-800'
+                                                                        : t.status === 'Rejected'
+                                                                            ? 'bg-red-100 text-red-800'
+                                                                            : 'bg-gray-100 text-gray-600'
+                                                        }`}
+                                                    >
+                                                        {capitalizeWords(t.status)}
+                                                    </motion.div>
+                                                </div>
+                                                <div>
+                                                    <p className="text-xs text-gray-500 uppercase tracking-wide">Description</p>
+                                                    <span className="font-medium text-gray-500">{t.description}</span>
+                                                </div>
+                                                <div>
+                                                    <p className="text-xs text-gray-500 uppercase tracking-wide">Interview Date</p>
+                                                    <span className="font-medium text-gray-500">{formatDate(t.interviewDate)}</span>
+                                                </div>
+                                            </div>
+
+                                            <span className="hidden sm:block w-full md:w-auto text-left font-bold text-gray-700">
                                                 {t.job}
                                             </span>
-                                            <span className="w-full md:w-auto text-left text-gray-700">
+                                            <span className="hidden sm:block w-full md:w-auto text-left text-gray-700">
                                                 {t.position}
                                             </span>
-                                            <span className="w-full md:w-auto text-left font-medium">
+                                            <span className="hidden sm:block w-full md:w-auto text-left font-medium">
                                                 <motion.div
                                                     className={`text-xs font-medium py-2 px-3 inline-flex rounded-3xl ${
                                                         t.status === 'Interviewing'
@@ -447,11 +537,11 @@ export default function TrackPage(){
                                                     {capitalizeWords(t.status)}
                                                 </motion.div>
                                             </span>
-                                            <span className="w-full md:w-auto text-left font-medium text-gray-500">
+                                            <span className="hidden sm:block w-full md:w-auto text-left font-medium text-gray-500">
                                                 {t.description}
                                             </span>
-                                            <span className="relative w-full md:w-auto text-left font-medium text-gray-500">
-                                                {formatDate(t.date)}
+                                            <span className="hidden sm:block relative w-full md:w-auto text-left font-medium text-gray-500">
+                                                {formatDate(t.interviewDate)}
                                                 <div className="absolute top-0 right-0 my-auto flex space-x-2">
                                                     <img
                                                         className="h-[17px] w-[17px] cursor-pointer"
@@ -462,6 +552,7 @@ export default function TrackPage(){
                                                                 position: t.position,
                                                                 status: t.status,
                                                                 description: t.description,
+                                                                interviewDate:t.interviewDate
                                                             });
                                                             setTrackId(t.id);
                                                             setHideEdit(true)
@@ -473,7 +564,7 @@ export default function TrackPage(){
                                                         className="h-[20px] w-[20px] cursor-pointer"
                                                         src={abin}
                                                         onClick={() => {setDeleteId(t.id);
-                                                        handleDelete(t.id);
+                                                            handleDelete(t.id);
                                                         }}
                                                         alt="Delete"
                                                     />

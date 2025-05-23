@@ -11,7 +11,7 @@ interface CalendarData{
     position:string,
     status:string,
     description:string,
-    date:string,
+    interviewDate:string,
 }
 interface CalendarEvent{
     title: string;
@@ -29,7 +29,7 @@ export default function CalendarPage(){
             if (response.status === 200 && response.data) {
                 const events: CalendarEvent[] = response.data.map(item => ({
                     title: `${item.job} - ${item.position} | ${item.status}`,
-                    start: item.date,
+                    start: item?.interviewDate,
 
                     className: `status-${item.status.toLowerCase()}`
                 }));
