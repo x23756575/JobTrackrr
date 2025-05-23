@@ -129,8 +129,8 @@ export default function Landing() {
         },.7)
         .to(wit.current,{
 
-            delay:1,
-            duration:.4,
+            delay:2,
+            duration:.3,
             text:"",
             ease:"sine.inOut"
         },.4)
@@ -139,8 +139,9 @@ export default function Landing() {
             img.current,
             { x:-650,opacity:0 },
             {
+                delay:1,
                 x: 0,
-                duration: 1.7,
+                duration: 2.7,
                 opacity:1,
                 transformOrigin: "right center",
                 ease: "elastic.out(1,.9)"
@@ -152,7 +153,7 @@ export default function Landing() {
             onSplit(self) {
                 gsap.from(self.chars, {
                     delay:.8,
-                    duration: .1,
+                    duration: .02,
                     y: -100,
                     autoAlpha: 1,
                     stagger: .3
@@ -354,12 +355,12 @@ export default function Landing() {
                     </div>
                 </div>
             </div>
-            <div className="grid grid-cols-1  md:grid-cols-[1fr_1fr] gap-7 justify-center h-70 md:w-[calc(100%-180px)] px-20 mx-auto mt-4 mb-18">
+            <div className="grid grid-cols-auto  md:grid-cols-[1fr_1fr] gap-14 justify-center h-100 md:w-[calc(100%-180px)] px-45 mx-auto mt-4 mb-18">
 
                 <motion.div className="p-[.15rem] rounded-lg bg-gradient-to-r from-gray-500 to-gray-700 "
-                    whileHover={{scale: 1.02,animationDuration:2}}
+                    whileHover={{scale: 1.01,animationDuration:2}}
                 >
-                    <div className="bg-white rounded-md p-6 h-full px-3.5 py-2.5n   dark:hover:bg-slate-100 shadow relative before:absolute before:inset-0 before:rounded-[inherit] before:bg-[linear-gradient(45deg,transparent_25%,theme(colors.white/.5)_50%,transparent_75%,transparent_100%)] dark:before:bg-[linear-gradient(45deg,transparent_25%,theme(colors.white)_50%,transparent_75%,transparent_100%)] before:bg-[length:250%_250%,100%_100%] before:bg-[position:200%_0,0_0] before:bg-no-repeat before:[transition:background-position_0s_ease] hover:before:bg-[position:-100%_0,0_0] hover:before:duration-[1500ms]">
+                    <div className="bg-white rounded-md p-6 h-full px-5 py-2.5n   dark:hover:bg-slate-100 shadow relative before:absolute before:inset-0 before:rounded-[inherit] before:bg-[linear-gradient(45deg,transparent_25%,theme(colors.white/.5)_50%,transparent_75%,transparent_100%)] dark:before:bg-[linear-gradient(45deg,transparent_25%,theme(colors.white)_50%,transparent_75%,transparent_100%)] before:bg-[length:250%_250%,100%_100%] before:bg-[position:200%_0,0_0] before:bg-no-repeat before:[transition:background-position_0s_ease] hover:before:bg-[position:-100%_0,0_0] hover:before:duration-[1500ms]">
                         <h1 className="text-left text-white font-semibold bg-gradient-to-r from-gray-400 to-gray-600 rounded-4xl px-5 py-1 inline-block  ">Jobless
                         </h1>
                         <span className="ml-2 font-semibold text-md text-gray-500">Start applying with 'confidence'</span>
@@ -385,35 +386,37 @@ export default function Landing() {
                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-check-icon lucide-check mr-1"><path
                                    d="M20 6 9 17l-5-5"/>
                             </svg>
-                                Keep Track of Your Applications
+                                Scan your resume against 50+ job descriptions!
                        </span>
                         <span className="flex justify-start mb-2">
                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black"
                                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-check-icon lucide-check mr-1"><path
                                    d="M20 6 9 17l-5-5"/>
                             </svg>
-                                Discord and email support
+                                Keep Track of Your Applications
+
                        </span>
                         <span className="flex justify-start mb-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black"
                              stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-check-icon lucide-check mr-1"><path
                             d="M20 6 9 17l-5-5"/>
                             </svg>
-                                Includes Jobless plan features
+                               Discord and email support
                            </span>
+
 
 
                     </div>
                 </motion.div>
 
                 <motion.div className="p-[.15rem] rounded-lg bg-gradient-to-r from-indigo-600 to-purple-500"
-                whileHover={{scale: 1.02,animationDuration:2}}
+                whileHover={{scale: 1.01,animationDuration:2}}
                 >
-                    <div className="bg-white rounded-md p-6 h-full    dark:hover:bg-slate-100 shadow relative before:absolute before:inset-0 before:rounded-[inherit] before:bg-[linear-gradient(45deg,transparent_25%,theme(colors.white/.5)_50%,transparent_75%,transparent_100%)] dark:before:bg-[linear-gradient(45deg,transparent_25%,theme(colors.white)_50%,transparent_75%,transparent_100%)] before:bg-[length:250%_250%,100%_100%] before:bg-[position:200%_0,0_0] before:bg-no-repeat before:[transition:background-position_0s_ease] hover:before:bg-[position:-100%_0,0_0] hover:before:duration-[1500ms]">
+                    <div className="bg-white rounded-md p-6 h-full dark:hover:bg-slate-100 shadow relative before:absolute before:inset-0 before:rounded-[inherit] before:bg-[linear-gradient(45deg,transparent_25%,theme(colors.white/.5)_50%,transparent_75%,transparent_100%)] dark:before:bg-[linear-gradient(45deg,transparent_25%,theme(colors.white)_50%,transparent_75%,transparent_100%)] before:bg-[length:250%_250%,100%_100%] before:bg-[position:200%_0,0_0] before:bg-no-repeat before:[transition:background-position_0s_ease] hover:before:bg-[position:-100%_0,0_0] hover:before:duration-[1500ms]">
                         <h1 className="text-left text-white font-semibold bg-gradient-to-r from-indigo-600 to-purple-500 rounded-4xl px-5 py-1 inline-block ">Employed
                         </h1>
                         <span className="ml-2 font-semibold text-md text-gray-500">Perfect to land a job!</span>
-                        <p className="text-5xl font-bold bg-gradient-to-r from-indigo-600 to-purple-500 text-transparent bg-clip-text my-3">€2.99</p>
+                        <p className="text-5xl font-bold bg-gradient-to-r from-indigo-600 to-purple-500 text-transparent bg-clip-text my-3 mb-6">€2.99</p>
 
                         <span className="flex justify-start mb-2  ml-1">
                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -455,22 +458,33 @@ export default function Landing() {
                                     </linearGradient>
                                   </defs>
                                </svg>
-                                Discord and email support
-                           </span>
-                        <span className="flex justify-start mb-2 ml-1">
-                               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="url(#indigoToPurple)" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" className="lucide lucide-check-icon lucide-check mr-1">
-                                  <path d="M20 6 9 17l-5-5"/>
-                                  <defs>
-                                    <linearGradient id="indigoToPurple" x1="0%" y1="0%" x2="100%" y2="0%">
-                                      <stop offset="0%" stop-color="#4f46e5"/>
-                                      <stop offset="100%" stop-color="#a855f7"/>
-                                    </linearGradient>
-                                  </defs>
-                               </svg>
                                 Includes Jobless plan features
                            </span>
+                        <a href="http://localhost:8080/oauth2/authorization/google">
+                            <motion.div className="mt-13 bg-gradient-to-r from-indigo-600 to-purple-500 px-14 py-3 rounded-xl inline-block dark:hover:bg-slate-100 shadow relative before:absolute before:inset-0 before:rounded-[inherit] before:bg-[linear-gradient(45deg,transparent_25%,theme(colors.white/.5)_50%,transparent_75%,transparent_100%)] dark:before:bg-[linear-gradient(45deg,transparent_25%,theme(colors.white)_50%,transparent_75%,transparent_100%)] before:bg-[length:250%_250%,100%_100%] before:bg-[position:200%_0,0_0] before:bg-no-repeat before:[transition:background-position_0s_ease] hover:before:bg-[position:-100%_0,0_0] hover:before:duration-[1500ms]"
+                            whileHover={{scale:1.02}}
+                            whileTap={{scale:0.98}}>
+                                <button className="font-semibold text-2xl text-white">
+                                    Purchase
+                                </button>
+                            </motion.div>
+                        </a>
+
+
+                        {/*<span className="flex justify-start mb-2 ml-1">*/}
+                        {/*       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"*/}
+                        {/*            fill="none" stroke="url(#indigoToPurple)" stroke-width="2" stroke-linecap="round"*/}
+                        {/*            stroke-linejoin="round" className="lucide lucide-check-icon lucide-check mr-1">*/}
+                        {/*          <path d="M20 6 9 17l-5-5"/>*/}
+                        {/*          <defs>*/}
+                        {/*            <linearGradient id="indigoToPurple" x1="0%" y1="0%" x2="100%" y2="0%">*/}
+                        {/*              <stop offset="0%" stop-color="#4f46e5"/>*/}
+                        {/*              <stop offset="100%" stop-color="#a855f7"/>*/}
+                        {/*            </linearGradient>*/}
+                        {/*          </defs>*/}
+                        {/*       </svg>*/}
+                        {/*        */}
+                        {/*   </span>*/}
 
 
                     </div>

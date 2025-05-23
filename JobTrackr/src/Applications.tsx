@@ -9,6 +9,7 @@ import React from "react";
 import bin from "./assets/removebin.png";
 import edit from "./assets/editbutton.png";
 import abin from "./assets/animbin.gif";
+import {Link} from "react-router-dom";
 
 interface formData {
     job:string;
@@ -215,15 +216,17 @@ export default function TrackPage(){
                 backgroundPosition: "center",
             }}>
                 {/* Navigation Bar - z-index: 50 (highest) */}
-                <nav className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
+                <nav className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50 relative">
                     <div className="max-w-7xl mx-auto px-4 py-4">
                         <motion.span
-                            initial={{ opacity: 0}}
-                            animate={{ opacity: 1}}
+                            initial={{opacity: 0}}
+                            animate={{opacity: 1}}
                             className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent text-center sm:text-left"
                         >
                             JobTrackr
                         </motion.span>
+
+
                     </div>
                 </nav>
 
@@ -337,8 +340,22 @@ export default function TrackPage(){
                     </div>
 
                     <div className="bg-[#FEFEFF] overflow-auto rounded-lg shadow relative">
-                        <div className="w-full z-20">
+                        <div className="w-full z-20 relative">
                             <h1 className="bg-[linear-gradient(to_right,_#ecfdf5,_#f5f3ff,_#eff6ff,_#fef2f2)] font-semibold text-2xl border-b border-gray-200 p-3">Your applications</h1>
+                            <Link to="/calendar">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" viewBox="0 0 24 24" fill="none"
+                                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                     className="lucide lucide-calendar-range-icon lucide-calendar-range absolute top-2 right-7">
+                                    <rect width="18" height="18" x="3" y="4" rx="2"/>
+                                    <path d="M16 2v4"/>
+                                    <path d="M3 10h18"/>
+                                    <path d="M8 2v4"/>
+                                    <path d="M17 14h-6"/>
+                                    <path d="M13 18H7"/>
+                                    <path d="M7 14h.01"/>
+                                    <path d="M17 18h.01"/>
+                                </svg>
+                            </Link>
                         </div>
 
                         <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr] w-full bg-gray-50 p-3 pb-4 pl-10 relative z-10">

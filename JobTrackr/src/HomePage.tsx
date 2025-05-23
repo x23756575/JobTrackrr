@@ -33,7 +33,7 @@ export default function Home() {
                 </div>
             </nav>
 
-            <div className="grid grid-cols-[1fr_1.5fr_1fr] overflow-y-auto mt-4 mb-2 gap-4 h-[calc(100vh-100px)]">
+            <div className="grid grid-cols-[auto] md:grid-cols-[1fr_1.5fr_1fr] overflow-y-auto mt-4 mb-2 gap-4 h-[calc(100vh-100px)]">
                 {/*first div*/}
                 <div className="bg-red-500 p-4 rounded text-white h-full">
                     1
