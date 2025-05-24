@@ -114,7 +114,6 @@ export default function Landing() {
                 transformOrigin: 'center bottom',
             }
         );
-
         tl.to(your.current, {
             scaleY: 0.8,
             duration: 0.3,
@@ -127,27 +126,46 @@ export default function Landing() {
             ease: "back.out(5)",
             color:"#7942FD"
         },.7)
-        .to(wit.current,{
+        const element = wit.current;
+        const text = element.textContent;
+        let index = text.length;
 
-            delay:2,
-            duration:.3,
-            text:"",
-            ease:"sine.inOut"
-        },.4)
-        .set(img.current, { display: "block" }, ">")
-        .fromTo(
-            img.current,
-            { x:-650,opacity:0 },
-            {
-                delay:1,
-                x: 0,
-                duration: 2.7,
-                opacity:1,
-                transformOrigin: "right center",
-                ease: "elastic.out(1,.9)"
-            },
-            1.5
-        );
+// Step-by-step deletion
+        function deleteText() {
+            if (index > 0) {
+                element.textContent = text.slice(0, --index);
+                gsap.delayedCall(0.05, deleteText); // typing speed
+            } else {
+                // Once all characters are gone, replace with SVG
+                element.innerHTML = `
+      <svg width="70" height="70" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    `;
+                gsap.fromTo(element, {x:-400, opacity: 0 }, {x:10, opacity: 1, duration: .7, ease:"power1" });
+
+            }
+        }
+
+// Start after a delay
+        gsap.delayedCall(2, deleteText); // wait 2s, then start
+
+
+        // .set(img.current, { display: "block" }, ">")
+        // .fromTo(
+        //     img.current,
+        //     { x:-650,opacity:0 },
+        //     {
+        //         delay:1,
+        //         x: 0,
+        //         duration: 2.7,
+        //         opacity:1,
+        //         transformOrigin: "right center",
+        //         ease: "elastic.out(1,.9)"
+        //     },
+        //     1.5
+        // );
         SplitText.create(hunt.current, {
             type: "chars",
             onSplit(self) {
@@ -196,9 +214,9 @@ export default function Landing() {
                  backgroundPosition: "center",
              }}
         >
+
             <nav className="bg-white shadow-sm relative">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-                    <span className="text-2xl md:text-3xl font-bold text-blue-600">JobTrackr</span>
+                <div className="max-w-7xl mx-auto py-2 flex items-center">
                     <Link to="/home">
                         <img
                             src={myImage}
@@ -206,6 +224,8 @@ export default function Landing() {
                             className="h-12 md:h-16"
                         />
                     </Link>
+                    <span className="text-2xl md:text-3xl font-bold text-blue-600">JobTrackr</span>
+
                 </div>
             </nav>
 

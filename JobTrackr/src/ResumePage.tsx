@@ -9,6 +9,7 @@ import ProgressBar from "./ProgressBar";
 import robot from "./assets/robot.png";
 import bg from "./assets/jbg.png";
 import circle from "./assets/greycircle.png";
+import {Link} from "react-router-dom";
 
 export interface ResumeData {
     experienceScore: number;
@@ -100,7 +101,6 @@ export default function ResumePage(): React.ReactElement {
         }
     };
 
-    // Speech synthesis effect
     useEffect(() => {
         if (adviceDone && advice) {
             const utterance = new SpeechSynthesisUtterance(advice);
@@ -550,15 +550,19 @@ Keep total response under 200 words. Be decisive, specific, and unapologetically
             backgroundSize: "cover",
             backgroundPosition: "center",
         }}>
-            <nav className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
-                <div className="max-w-7xl mx-auto px-4 py-4">
-                    <motion.span
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent text-center sm:text-left"
-                    >
-                        JobTrackr
-                    </motion.span>
+            <nav className="bg-white shadow-sm relative">
+                <div className="max-w-7xl px-4 sm:px-6 py-2 flex items-center">
+
+                    <Link to="/" className="flex items-center">
+                        <span className="text-xl md:text-3xl font-bold text-blue-600">JobTrackr</span>
+                    </Link>
+
+                    <div className="flex justify-start gap-6 font-medium md:text-sm text-xs items-center ml-3 pt-1">
+                        <Link to="/home" className="text-gray-700 hover:text-blue-600">Home</Link>
+                        <Link to="/scan" className="text-gray-700 hover:text-blue-600">Resume scanner</Link>
+                        <Link to="/track" className="text-gray-700 hover:text-blue-600">Applications</Link>
+                    </div>
+
                 </div>
             </nav>
 

@@ -219,15 +219,19 @@ export default function TrackPage(){
                 backgroundSize: "cover",
                 backgroundPosition: "center",
             }}>
-                <nav className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50 relative">
-                    <div className="max-w-7xl mx-auto px-4 py-4">
-                        <motion.span
-                            initial={{opacity: 0}}
-                            animate={{opacity: 1}}
-                            className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent text-center sm:text-left"
-                        >
-                            JobTrackr
-                        </motion.span>
+                <nav className="bg-white shadow-sm relative">
+                    <div className="max-w-7xl px-4 sm:px-6 py-2 flex items-center">
+
+                        <Link to="/" className="flex items-center">
+                            <span className="text-xl md:text-3xl font-bold text-blue-600">JobTrackr</span>
+                        </Link>
+
+                        <div className="flex justify-start gap-6 font-medium md:text-sm text-xs items-center ml-3 pt-1">
+                            <Link to="/home" className="text-gray-700 hover:text-blue-600">Home</Link>
+                            <Link to="/scan" className="text-gray-700 hover:text-blue-600">Resume scanner</Link>
+                            <Link to="/track" className="text-gray-700 hover:text-blue-600">Applications</Link>
+                        </div>
+
                     </div>
                 </nav>
 
@@ -250,8 +254,7 @@ export default function TrackPage(){
                     </div>
                 </div>
 
-                {/* Main Content */}
-                <div className="flex flex-col px-4 sm:px-0 sm:w-[calc(100vw-150px)] min-h-[60vh] mx-auto relative z-20 pb-6">
+                <div className="flex flex-col px-4 sm:px-0 sm:w-[calc(100vw-150px)] min-h-[60vh] mx-auto relative z-1 pb-6">
                     {/* Form Section */}
                     <div className={`flex justify-start items-center w-full relative z-25 ${hideForm ? 'p-0' : 'p-4'} mb-4`}>
                         <div className={`rounded-lg w-full ${!hideForm ? 'bg-white shadow-md p-4 sm:p-6' : ''}`}>
@@ -355,24 +358,29 @@ export default function TrackPage(){
                         </div>
                     </div>
 
-                    <div className="bg-[#FEFEFF] overflow-hidden rounded-lg shadow relative flex-1">
+                    <div className="bg-[#FEFEFF] rounded-lg shadow relative flex-1">
                         <div className="w-full z-20 relative">
-                            <div className="flex justify-between items-center bg-[linear-gradient(to_right,_#ecfdf5,_#f5f3ff,_#eff6ff,_#fef2f2)] border-b border-gray-200 p-3">
+                            <span className="text-2xl md:px-4 md:py-2 px-2 py-0 rounded rounded-t-xl bg-[#FBF3F4] font-semibold absolute z-10 md:-top-11 -top-7 right-4 text-slate-600">Calendar</span>
+                            <div className="flex justify-between items-center bg-[linear-gradient(to_right,_#ecfdf5,_#f5f3ff,_#eff6ff,_#fef2f2)] border-b border-gray-200 p-3 relative">
+
                                 <h1 className="font-semibold text-xl sm:text-2xl">Your applications</h1>
-                                <Link to="/calendar">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24" fill="none"
-                                         stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                                         className="lucide lucide-calendar-range-icon lucide-calendar-range sm:w-[45px] sm:h-[45px]">
-                                        <rect width="18" height="18" x="3" y="4" rx="2"/>
-                                        <path d="M16 2v4"/>
-                                        <path d="M3 10h18"/>
-                                        <path d="M8 2v4"/>
-                                        <path d="M17 14h-6"/>
-                                        <path d="M13 18H7"/>
-                                        <path d="M7 14h.01"/>
-                                        <path d="M17 18h.01"/>
-                                    </svg>
-                                </Link>
+                                    <motion.div whileHover={{scale: 1.1}}>
+                                        <Link to="/calendar" className="flex justify-center items-center">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24" fill="none"
+                                                     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                                     className="lucide lucide-calendar-range-icon lucide-calendar-range sm:w-[50px] sm:h-[50px] mr-11"
+                                                    >
+                                                    <rect width="18" height="18" x="3" y="4" rx="2"/>
+                                                    <path d="M16 2v4"/>
+                                                    <path d="M3 10h18"/>
+                                                    <path d="M8 2v4"/>
+                                                    <path d="M17 14h-6"/>
+                                                    <path d="M13 18H7"/>
+                                                    <path d="M7 14h.01"/>
+                                                    <path d="M17 18h.01"/>
+                                                </svg>
+                                        </Link>
+                                    </motion.div>
                             </div>
                         </div>
 

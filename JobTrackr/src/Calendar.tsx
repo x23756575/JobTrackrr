@@ -4,7 +4,7 @@ import bg from "./assets/jbg.png";
 import {Link} from "react-router-dom";
 import myImage from "./assets/JobTrackr.png";
 import axios from "axios";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 
 interface CalendarData{
     job:string,
@@ -57,17 +57,21 @@ return(
              }}
         >
             <nav className="bg-white shadow-sm relative">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex items-center justify-between">
-                    <span className="text-2xl md:text-3xl font-bold text-blue-600">JobTrackr</span>
-                    <Link to="/home">
-                        <img
-                            src={myImage}
-                            alt="JobTrackr Logo"
-                            className="h-12 md:h-16"
-                        />
+                <div className="max-w-7xl px-4 sm:px-6 py-2 flex items-center">
+
+                    <Link to="/" className="flex items-center">
+                        <span className="text-xl md:text-3xl font-bold text-blue-600">JobTrackr</span>
                     </Link>
+
+                    <div className="flex justify-start gap-6 font-medium md:text-sm text-xs items-center ml-3 pt-1">
+                        <Link to="/home" className="text-gray-700 hover:text-blue-600">Home</Link>
+                        <Link to="/scan" className="text-gray-700 hover:text-blue-600">Resume scanner</Link>
+                        <Link to="/track" className="text-gray-700 hover:text-blue-600">Applications</Link>
+                    </div>
+
                 </div>
             </nav>
+
             <div className="w-full max-w-screen-lg mx-auto px-4">
             <FullCalendar
                 plugins={[ dayGridPlugin]}

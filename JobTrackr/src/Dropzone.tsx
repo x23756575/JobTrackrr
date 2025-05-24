@@ -5,6 +5,7 @@ import {ResultsBar} from "./ProgressBar.tsx";
 import { Player } from '@lottiefiles/react-lottie-player';
 import './App.css';
 import gsap from 'gsap';
+import loader from "./assets/loading.gif";
 
 interface FileWithPath extends File {
     path?: string;
@@ -188,7 +189,7 @@ export default function Dropzone(): React.ReactElement {
             jobDesc: e.target.value,
         }));
     };
-    const prepend:string = "From the given keywords, select up to three technical skills relevant to the job role to people looking for jobs. Provide concise, professional bullet points on how to improve those skills in under 40 words and dont give summaries or examples. If fewer than three, say no skills found. Ignore non-technical topics."
+    const prepend:string = "From the given keywords, select up to three technical skills relevant to the job role to people looking for jobs. Provide concise, professional bullet points on how to improve those skills in under 40 words and dont give summaries or examples. If fewer than three, say no skills found and dont list the skills. Ignore non-technical topics."
     const technicalSkillsList = [
         // Programming Languages
         "javascript", "typescript", "java", "python", "c", "c++", "c#", "go", "rust", "ruby", "swift", "kotlin",
@@ -323,6 +324,7 @@ export default function Dropzone(): React.ReactElement {
                     console.log(aiResponse.response);
                     setImprov(aiResponse.response)
                     setDone(prev => !prev)
+                setImLoading(false)
 
 
             } else {
@@ -339,7 +341,11 @@ export default function Dropzone(): React.ReactElement {
         <>
         {!results ? (
             <>
-            <h1 className="text-blue-500 font-medium text-2xl text-center  w-full mb-3">Resume Match analysis</h1>
+                <h1 className="text-3xl font-bold text-center w-full mb-6">
+                    <span className="bg-gradient-to-r from-blue-600 to-blue-500 bg-clip-text text-transparent">YOUR RESUME</span>
+                    <span className="text-gray-600 font-bold mx-3">VS</span>
+                    <span className="bg-gradient-to-r from-red-600 to-red-500 bg-clip-text text-transparent">JOB DESCRIPTION</span>
+                </h1>
             <div className="grid grid-cols-[auto_1fr] mb-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="none"
                      stroke="blue" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -458,7 +464,9 @@ export default function Dropzone(): React.ReactElement {
                 </motion.button>
                 ):(
                     <div>
-                        <motion.div whileHover={{scale:1.02}} className="w-full loader"></motion.div>
+                        <motion.div whileHover={{scale:1.02}} className="">
+                            <img  className="w-16 h-16" src={loader}/>
+                        </motion.div>
                     </div>
 
                 )};
@@ -580,6 +588,7 @@ export default function Dropzone(): React.ReactElement {
                         whileTap={{scale:0.98}}
                         onClick={() => {showResults(false);
                             setForm(initialState);
+                            isLoading(false)
                         }}
 
                         className="bg-blue-500 font-bold text-white p-2 px-4 rounded-md flex items-center justify-center gap-2"

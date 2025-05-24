@@ -103,30 +103,32 @@ html, body {
     overflow: hidden;
 }
 .fc-scrollgrid{
-    background: WHITE;
-    background: linear-gradient(90deg,rgba(0, 0, 0, 0.18) 0%, rgba(186, 186, 186, 0.000001) 100%);
+
 }
 .fc-header-toolbar{
-    background: INDIGO;
-    background: linear-gradient(90deg,rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0.44) 100%);
-    padding:5px;
+    background: linear-gradient(to right, #ecfdf5, #f5f3ff, #eff6ff, #fef2f2);
     border-radius: 10px;
-    color:blue;
+    color:#4F46E5;
+    margin-top:15px;
+    padding: 5px 5px 5px 20px;
     font-weight: bold;
 }
 .fc-media-screen{
     margin:auto;
-
+    background-color: white;
+}
+.fc-button{
+    background-color: blue;
+    color:blue;
 }
 .fc-event:hover {
     transform: translateY(-1px);
     background-color: gray;
 }
 .fc-header-toolbar {
-    background: linear-gradient(90deg, #3f51b5, #1a237e);
-    color: white;
-}
+    background: linear-gradient(to right, #ecfdf5, #f5f3ff, #eff6ff, #fef2f2);
 
+}
 .fc-event.status-hired {
     background-color: #4caf50;
     color: white;
@@ -162,8 +164,6 @@ html, body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     background-color: #616161;
 }
-
-
 .fc-event-time {
     display: block;
     width: 100%;
@@ -190,6 +190,7 @@ html, body {
     border-radius: 8px;
     padding: 10px;
 }
+.fc-tool
 .fc-event {
     animation: fadeIn 0.3s ease-in-out;
 }
@@ -242,7 +243,40 @@ html, body {
     width: 100% !important;
     max-width: 100% !important;
 }
+.fc .fc-button.fc-today-button {
+    background-color: blue;
+    border:none;
+    color: white;
+    border-radius: 6px;
+    font-weight: bold;
+}
+.fc .fc-prev-button.fc-button{
+    background-color:#4F46E5;
+    border:none;
+}
+.fc .fc-next-button.fc-button{
+    background-color:#4F46E5;
+    border:none;
+}
+.fc .fc-prev-button.fc-button:hover{
+    background-color:darkslategray;
+    transition: 200ms;
+    border:none;
+}
+.fc .fc-col-header-cell{
 
+}
+thead{
+    background: linear-gradient(to right, #ecfdf5, #f5f3ff, #eff6ff, #fef2f2);
+}
+.fc-daygrid-event-dot{
+display: none;
+}
+.fc .fc-next-button.fc-button:hover{
+    background-color:darkslategray;
+    transition: 200ms;
+    border:none;
+}
 @media (max-width: 768px) {
     .fc-event {
         padding: 6px 8px;
