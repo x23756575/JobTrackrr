@@ -133,7 +133,7 @@ export default function Dropzone(): React.ReactElement {
     }, [imLoading]);
 
 
-    const initialState: fileDesc ={
+    const initialState: fileDesc = {
         file: null,
         jobDesc: '',
     }
@@ -306,7 +306,7 @@ export default function Dropzone(): React.ReactElement {
                         },
 
                         body: JSON.stringify({
-                            model: "mistral",
+                            model: "gemma3:12b",
                             prompt: prepend + text.missedKeywords,
                             stream: false,
                         }),

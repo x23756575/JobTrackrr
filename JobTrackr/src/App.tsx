@@ -8,6 +8,9 @@ import ResumePage from "./ResumePage.tsx";
 import ChatPage from "./Chat.tsx";
 import TrackPage from "./Applications.tsx";
 import CalendarPage from "./Calendar.tsx";
+import RewritePage from "./Rewrite.tsx";
+import TermsPage from "./terms.tsx";
+import PrivacyPolicy from "./pp.tsx"
 
 export default function App() {
 
@@ -23,6 +26,9 @@ export default function App() {
        <Route path="/chat" element={<ChatPage/>}></Route>
        <Route path="/track" element={<TrackPage/>}></Route>
        <Route path="/calendar" element={<CalendarPage/>}></Route>
+       <Route path="/rewrite" element={<RewritePage/>}></Route>
+       <Route path="/terms-of-service" element={<TermsPage/>}></Route>
+       <Route path="privacy-policy" element={<PrivacyPolicy/>}></Route>
     </Routes>
    </BrowserRouter>
   )

@@ -523,7 +523,7 @@ Keep total response under 200 words. Be decisive, specific, and unapologetically
             },
 
             body: JSON.stringify({
-                model: "mistral",
+                model: "gemma3:12b",
                 prompt: prepend + resumeText,
                 stream: false,
             }),
@@ -559,7 +559,7 @@ Keep total response under 200 words. Be decisive, specific, and unapologetically
 
                     <div className="flex justify-start gap-6 font-medium md:text-sm text-xs items-center ml-3 pt-1">
                         <Link to="/home" className="text-gray-700 hover:text-blue-600">Home</Link>
-                        <Link to="/scan" className="text-gray-700 hover:text-blue-600">Resume scanner</Link>
+                        <Link to="/calendar" className="text-gray-700 hover:text-blue-600">Calendar</Link>
                         <Link to="/track" className="text-gray-700 hover:text-blue-600">Applications</Link>
                     </div>
 

@@ -34,13 +34,11 @@ export default function Home() {
                 </div>
             </nav>
 
-            <div className="grid grid-cols-1 md:grid-cols-[1fr_1.5fr_1fr] gap-4 p-4 min-h-[calc(100vh-100px)]">
-                <div className="bg-red-500 p-4 rounded text-white min-h-[200px] md:min-h-full">
-                    1
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-[70%_auto] gap-4 p-4 min-h-[calc(100vh-100px)]">
                 <div className="bg-white p-4 rounded text-white min-h-[300px]">
                     <Dropzone/>
                 </div>
+
                 <div className="bg-white p-6 rounded-xl shadow-lg flex flex-col animate-fade-in min-h-[600px]">
                     <header className="font-bold tracking-wide text-center text-blue-500 text-2xl mb-6">
                         RESUME FEEDBACK HUB
