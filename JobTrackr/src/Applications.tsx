@@ -9,7 +9,9 @@ import React from "react";
 import bin from "./assets/removebin.png";
 import edit from "./assets/editbutton.png";
 import abin from "./assets/animbin.gif";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
+import Timeline from "./Timeline.tsx"
+
 
 interface formData {
     job:string;
@@ -66,6 +68,7 @@ export default function TrackPage(){
     const [track, setTrack] = useState<trackData[]>([]);
     const [editForm, setEditForm] = useState<editFormData>(initialEditState)
     const [hideEdit,setHideEdit] = useState<boolean>(true);
+    const [hoveredId, setHoveredId] = useState<string | null>(null);
     const appData = useRef(null);
 
     const initialStats : appStats = {
@@ -214,11 +217,13 @@ export default function TrackPage(){
 
     return(
         <>
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 animate-scroll-bg" style={{
+            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 animate-scroll-bg z-[0]" style={{
                 backgroundImage: `url(${bg})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
             }}>
+
+
                 <nav className="bg-white shadow-sm relative">
                     <div className="max-w-7xl px-4 sm:px-6 py-2 flex items-center">
 
@@ -235,7 +240,7 @@ export default function TrackPage(){
                     </div>
                 </nav>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 mx-auto gap-3 sm:gap-5 mt-6 px-4 sm:px-0 sm:w-[calc(100vw-150px)] mb-[30px] sm:mb-[50px] relative z-30">
+                <div className="grid grid-cols-2 sm:grid-cols-4 mx-auto gap-3 sm:gap-5 mt-6 px-4 sm:px-0 sm:w-[calc(100vw-150px)] mb-[30px] sm:mb-[50px] relative z-[0]">
                     <div className="bg-gradient-to-r from-[#FEFEFF] to-green-100 rounded-lg shadow">
                         <p className="text-sm sm:text-md p-3 sm:p-4 text-gray-600">Jobs Landed</p>
                         <p className="text-xl sm:text-2xl text-green-700 font-bold ml-3 sm:ml-4 mb-3 sm:mb-4">{stats.hired}</p>
@@ -346,7 +351,7 @@ export default function TrackPage(){
                                 </form>
                             )}
                             {hideForm && (
-                                <div className="flex justify-start mb-2 ml-1">
+                                <div className="flex justify-start mb-2 ml-1 z-[0]">
                                     <button
                                         className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white mb-2 py-3 px-4 rounded-xl hover:opacity-90 transition-opacity font-medium w-full sm:w-auto"
                                         onClick={() => setHideForm(prev => !prev)}
@@ -392,7 +397,7 @@ export default function TrackPage(){
                             <span className="text-left font-medium text-gray-500">Interview date</span>
                         </div>
 
-                        <div className="w-full p-3 pb-4 sm:pl-10 relative z-5 overflow-auto max-h-[60vh]">
+                        <div className="w-full p-3 pb-4 sm:pl-10 relative z-5 overflow-auto max-h-[60vh] z-[0]">
                             <div ref={appData} className="space-y-2 sm:space-y-0 sm:[&>*:nth-child(odd)]:bg-gray-50 relative z-0">
                                 {track?.map((t: trackData) => (
                                     trackId === t.id ? (
@@ -455,7 +460,17 @@ export default function TrackPage(){
                                         <div
                                             key={t.id}
                                             className="bg-white sm:bg-transparent p-4 sm:p-0 rounded-2xl sm:rounded-none shadow sm:shadow-none sm:grid sm:grid-cols-5 mb-2 sm:mb-0 sm:py-3 sm:px-4 w-full sm:hover:bg-gray-50 space-y-2 sm:space-y-0 sm:gap-y-1 relative"
+                                            onMouseEnter={() => setHoveredId(t.id)}
+                                            onMouseLeave={() => setHoveredId(null)}
                                         >
+
+                                            {hoveredId === t.id && (
+                                                <Timeline
+                                                    className="absolute -top-0 left-30 bg-gray-100 shadow-md shadow-gray-100 rounded-xl h-[100px]  w-100  z-[9999]"
+                                                    id={t.id}
+                                                    currentStep={t.status}
+                                                />
+                                            )}
                                             <div className="sm:hidden space-y-2">
                                                 <div className="flex justify-between items-start">
                                                     <div>

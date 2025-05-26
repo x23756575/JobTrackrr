@@ -543,8 +543,10 @@ export default function Landing() {
             </div>
 
             <footer className="mt-12 py-6 bg-white bg-opacity-80">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center text-gray-600">
-                    <p>© 2025 JobTrackr. All rights reserved.</p>
+                <div className="relative max-w-7xl mx-auto px-4 sm:px-6 text-center text-gray-600">
+                    <span className="absolute left-0 bottom-0">© 2025 JobTrackr. All rights reserved.</span>
+                    <Link to="/terms-of-service"><span className="p-4">Terms Of Service</span></Link>
+                    <Link to="/privacy-policy"><span className="p-4">Privacy Policy</span></Link>
                 </div>
             </footer>
         </div>

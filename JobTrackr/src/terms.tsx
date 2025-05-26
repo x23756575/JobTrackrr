@@ -1,9 +1,23 @@
 import React from 'react';
+import {Link} from "react-router-dom";
+import myImage from "./assets/JobTrackr.png";
 
 export default function Terms() {
     return (
+        <>
+        <nav className="bg-white shadow-sm relative">
+            <div className="max-w-7xl mx-auto py-2 flex justify-center items-center">
+
+                <span className="text-3xl md:text-4xl font-bold text-blue-600">JobTrackr</span>
+
+            </div>
+        </nav>
         <main style={styles.container}>
+
             <h1 style={styles.title}>Terms of Service</h1>
+
+            <Link className="absolute top-0 left-0 m-3 font-bold mt-4" to="/">Back to landing</Link>
+            <Link className="absolute top-0 left-50 m-3 font-bold mt-4 underline" to="/privacy-policy">Privacy policy</Link>
             <p style={styles.lastUpdated}>Last Updated: 26/5/2025</p>
 
             <p>
@@ -106,6 +120,7 @@ export default function Terms() {
                 </address>
             </section>
         </main>
+        </>
     );
 }
 

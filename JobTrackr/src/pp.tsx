@@ -1,8 +1,20 @@
 import React from 'react';
+import {Link} from "react-router-dom";
 
 export default function PrivacyPolicy() {
     return (
+
+        <>
+        <nav className="bg-white shadow-sm relative">
+            <div className="max-w-7xl mx-auto py-2 flex justify-center items-center">
+
+                <span className="text-3xl md:text-4xl font-bold text-blue-600">JobTrackr</span>
+
+            </div>
+        </nav>
         <main style={styles.container}>
+            <Link className="absolute top-0 left-0 m-3 font-bold mt-4" to="/">Back to landing</Link>
+            <Link className="absolute top-0 left-50 m-3 font-bold mt-4 underline" to="/terms-of-service">Terms Of Service</Link>
             <h1 style={styles.title}>Privacy Policy</h1>
             <p style={styles.lastUpdated}>Last Updated: 26/5/25</p>
 
@@ -64,6 +76,7 @@ export default function PrivacyPolicy() {
                 </address>
             </section>
         </main>
+        </>
     );
 }
 
