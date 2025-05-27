@@ -69,6 +69,12 @@ export default function TrackPage(){
     const [editForm, setEditForm] = useState<editFormData>(initialEditState)
     const [hideEdit,setHideEdit] = useState<boolean>(true);
     const [hoveredId, setHoveredId] = useState<string | null>(null);
+    const [timeline , showTimeline] = useState<boolean>(false);
+    const [tlId, setTlId] = useState<string>('');
+    const [tlPos, setTlPos] = useState<string>('');
+    const [tlJob, setTlJob] = useState<string>('');
+    const [clickedTL, setClicked] = useState<string>('');
+
     const appData = useRef(null);
 
     const initialStats : appStats = {
@@ -258,6 +264,14 @@ export default function TrackPage(){
                         <p className="text-xl sm:text-2xl text-red-600 font-bold ml-3 sm:ml-4 mb-3 sm:mb-4">{stats.rejections}</p>
                     </div>
                 </div>
+                {timeline && (
+                   <>
+
+                        <div className="flex flex-col justify-center items-center sm:w-[10px] md:w-auto">
+                            <Timeline className="justify-center" key={tlId} currentStep={tlId}/>
+                        </div>
+                   </>
+                    )};
 
                 <div className="flex flex-col px-4 sm:px-0 sm:w-[calc(100vw-150px)] min-h-[60vh] mx-auto relative z-1 pb-6">
                     {/* Form Section */}
@@ -367,8 +381,12 @@ export default function TrackPage(){
                         <div className="w-full z-20 relative">
                             <span className="text-2xl md:px-4 md:py-2 px-2 py-0 rounded rounded-t-xl bg-[#FBF3F4] font-semibold absolute z-10 md:-top-11 -top-7 right-4 text-slate-600">Calendar</span>
                             <div className="flex justify-between items-center bg-[linear-gradient(to_right,_#ecfdf5,_#f5f3ff,_#eff6ff,_#fef2f2)] border-b border-gray-200 p-3 relative">
+                                <div>
+                                    <h1 className="font-semibold text-xl sm:text-2xl">Your applications</h1>
+                                    <p className="text-xs font-semibold text-gray-500 mt-1">Click an application to view timeline</p>
+                                </div>
 
-                                <h1 className="font-semibold text-xl sm:text-2xl">Your applications</h1>
+
                                     <motion.div whileHover={{scale: 1.1}}>
                                         <Link to="/calendar" className="flex justify-center items-center">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24" fill="none"
@@ -462,15 +480,22 @@ export default function TrackPage(){
                                             className="bg-white sm:bg-transparent p-4 sm:p-0 rounded-2xl sm:rounded-none shadow sm:shadow-none sm:grid sm:grid-cols-5 mb-2 sm:mb-0 sm:py-3 sm:px-4 w-full sm:hover:bg-gray-50 space-y-2 sm:space-y-0 sm:gap-y-1 relative"
                                             onMouseEnter={() => setHoveredId(t.id)}
                                             onMouseLeave={() => setHoveredId(null)}
+                                            onClick={() => {
+                                                setTlId('')
+                                                setTlId(t.status)
+                                                setTlPos(t.position)
+                                                setTlJob(t.job)
+                                                showTimeline(true)}
+                                            }
                                         >
 
-                                            {hoveredId === t.id && (
-                                                <Timeline
-                                                    className="absolute -top-0 left-30 bg-gray-100 shadow-md shadow-gray-100 rounded-xl h-[100px]  w-100  z-[9999]"
-                                                    id={t.id}
-                                                    currentStep={t.status}
-                                                />
-                                            )}
+                                            {/*{hoveredId === t.id && (*/}
+                                            {/*    <Timeline*/}
+                                            {/*        className="absolute -top-0 left-30 bg-gray-100 shadow-md shadow-gray-100 rounded-xl h-[100px]  w-100  z-[9999]"*/}
+                                            {/*        id={t.id}*/}
+                                            {/*        currentStep={t.status}*/}
+                                            {/*    />*/}
+                                            {/*)}*/}
                                             <div className="sm:hidden space-y-2">
                                                 <div className="flex justify-between items-start">
                                                     <div>

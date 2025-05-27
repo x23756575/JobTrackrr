@@ -30,6 +30,21 @@
         background-repeat: repeat-x;
     }
 }
+/*    d3    */
+
+.glow{
+    filter: drop-shadow(0 0 8px currentColor);
+}
+.lineglow{
+    filter: drop-shadow(0 0 8px #4caf50);
+}
+.label{
+    fill:currentColor;
+    background-color: black;
+    font-weight:bold;
+}
+/**/
+
 .loader {
     --s: 25px;
     --g: 5px;
