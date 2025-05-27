@@ -3,6 +3,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { type DropzoneRef, useDropzone } from "react-dropzone";
 import { motion } from "framer-motion";
 import axios from "axios";
+import {InferenceClient} from "@huggingface/inference";
 
 interface FileWithPath extends File {
     path?: string;
@@ -18,7 +19,7 @@ export default function RewritePage() {
     const [hovered, setHovered] = useState<boolean>(false);
     // const [fileMode, setFileMode] = useState<boolean>(true);
     const [text, setText] = useState<string>('');
-    const [result, setResult] = useState<string>('');
+    const [result, setResult] = useState<string | undefined>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const [form, setForm] = useState<FileDesc>({
@@ -81,11 +82,10 @@ export default function RewritePage() {
 ;`
 
 
-    const submitData = async(): Promise<void> => {
-        // Prevent multiple simultaneous requests
+    const submitData = async (): Promise<void> => {
         if (isLoading) return;
 
-        // // Validate input before starting
+        // Optionally re-enable these validations if needed
         // if (!fileMode && !form.text.trim()) {
         //     setResult("Please enter some text first.");
         //     return;
@@ -100,104 +100,43 @@ export default function RewritePage() {
         setResult('');
 
         try {
-                const inputText = form.text.trim();
-
-                const requestPayload = {
-                    model: "gemma3:12b",
-                    prompt: `${prepend}\n\nTimestamp: ${Date.now()}\nRandom: ${Math.random()}\n\n${inputText}`,
-                    stream: false,
-                    options: {
-                        seed: Math.floor(Math.random() * 1000000),
-                        temperature: 0.8,
-                        top_p: 0.9,
-                        repeat_penalty: 1.1,
-                        num_ctx: 4096,
-                    }
-                };
-
-
-
-                const ollama = await fetch("http://localhost:11434/api/generate", {
-                    method: "POST",
-                    headers: {
-                        "Content-type": "application/json"
-                    },
-                    body: JSON.stringify(requestPayload),
-                });
-
-                if (!ollama.ok) {
-                    throw new Error(`Ollama API error: ${ollama.status}`);
+            const inputText = form.text.trim();
+            const requestPayload = {
+                model: "meta-llama/Llama-3.1-8B-Instruct",
+                prompt: `${prepend}\n\nTimestamp: ${Date.now()}\nRandom: ${Math.random()}\n\n${inputText}`,
+                stream: false,
+                options: {
+                    seed: Math.floor(Math.random() * 1000000),
+                    temperature: 0.8,
+                    top_p: 0.9,
+                    repeat_penalty: 1.1,
+                    num_ctx: 8192,
                 }
+            };
 
-                const ai = await ollama.json();
-                console.log('Received AI response:', ai);
+            const apiKey = import.meta.env.VITE_HF_API_KEY;
+            const client = new InferenceClient(apiKey);
 
-                if (ai && ai.response) {
-                    console.log('Response length:', ai.response.length);
-                    setResult(ai.response);
-                    setIsLoading(false)
-                } else {
-                    console.log('No response in AI object:', ai);
-                    setResult("No response received from AI");
-                    setIsLoading(false)
-                }
+            const ollama = await client.chatCompletion({
+                provider: "nebius",
+                model: "meta-llama/Llama-3.1-8B-Instruct",
+                messages: [{ role: "user", content: prepend + inputText }],
+                temperature: 0.8,
+                top_p: 0.9,
+                seed: 123456,
+                max_tokens: 1024,
+            });
 
-            // } else if (fileMode && form.file) {
-            //     console.log('Processing file:', form.file.name);
-            //
-            //     const data = new FormData();
-            //     data.append('file', form.file);
-            //
-            //     const response = await axios.post("http://localhost:8080/rewrite", data);
-            //     console.log('File processing response:', response.data);
-            //
-            //     const extractedText = response.data?.text || '';
-            //     setText(extractedText);
-            //
-            //     console.log('Extracted text length:', extractedText.length);
-            //
-            //     const requestPayload = {
-            //         model: "mistral",
-            //         prompt:`${prepend}\n\nTimestamp: ${Date.now()}\nRandom: ${Math.random()}\n\n${response.data.text}`,
-            //         stream: false,
-            //         options: {
-            //             seed: Math.floor(Math.random() * 1000000),
-            //             temperature: 0.8,
-            //             top_p: 0.9,
-            //             repeat_penalty: 1.1,
-            //             num_ctx: 4096,
-            //         }
-            //     };
-            //
-            //     const ollama = await fetch("http://localhost:11434/api/generate", {
-            //         method: "POST",
-            //         headers: {
-            //             "Content-type": "application/json"
-            //         },
-            //         body: JSON.stringify(requestPayload),
-            //     });
-            //
-            //     if (!ollama.ok) {
-            //         throw new Error(`Ollama API error: ${ollama.status}`);
-            //     }
-
-                // const ai = await ollama.json();
-                // console.log('Received AI response for file:', ai);
-
-                // if (ai && ai.response) {
-                //     console.log('Response length:', ai.response.length);
-                //     setResult(ai.response);
-                // } else {
-                //     console.log('No response in AI object:', ai);
-                //     setResult("No response received from AI");
-                // }
-
-
-        } catch(err) {
+            console.log('Received AI response:', ollama);
+            setResult(ollama.choices?.[0]?.message?.content || "No response from AI.");
+        } catch (err) {
             console.error('Submission error:', err);
-            // setResult(`Error occurred while processing: ${err instanceof Error ? err.message : 'Unknown error'}`);
+            setResult(`Error occurred: ${err instanceof Error ? err.message : 'Unknown error'}`);
+        } finally {
+            setIsLoading(false);
         }
     };
+
 
     const clearAll = () => {
         setForm({
@@ -331,9 +270,9 @@ export default function RewritePage() {
 
                                 <div className="flex gap-2 mt-4">
                                     <motion.button
-                                        className={`${isLoading ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'} text-white transition-all duration-300 rounded-md px-6 py-2 flex-1`}
+                                        className={`${isLoading ? 'bg-gray-400' : 'bg-gray-500 text-white hover:bg-black'} text-black transition-all duration-300 rounded-md px-6 py-2 flex-1`}
                                         onClick={submitData}
-                                        whileHover={!isLoading ? {scale: 1.05} : {}}
+                                        whileHover={!isLoading ? {scale: 1.01} : {}}
                                         whileTap={!isLoading ? {scale: 0.98} : {}}
                                         disabled={isLoading || !form.text.trim()}
                                     >

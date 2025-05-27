@@ -9,7 +9,11 @@ import ProgressBar from "./ProgressBar";
 import robot from "./assets/robot.png";
 import bg from "./assets/jbg.png";
 import circle from "./assets/greycircle.png";
+import { InferenceClient } from "@huggingface/inference";
 import {Link} from "react-router-dom";
+import { OpenAI } from "openai";
+
+
 
 export interface ResumeData {
     experienceScore: number;
@@ -32,7 +36,7 @@ export default function ResumePage(): React.ReactElement {
     const [hideFile, setHideFile] = useState<boolean>(false);
     const [showSpeech, setShowSpeech] = useState<boolean>(false);
     const [showAdvice, setShowAdvice] = useState<boolean>(false);
-    const [ai ,setAI] = useState<ResumeData | null>(null);
+    const [ai ,setAI] = useState<string | undefined>(null);
     const [advice, setAdvice] = useState<string>('');
     const [result,setResult] = useState<string>('');
     const [aiLoading, setAiLoading] = useState<boolean>(false);
@@ -42,6 +46,8 @@ export default function ResumePage(): React.ReactElement {
     const leftCircle = useRef<HTMLImageElement>(null);
     const middleCircle = useRef<HTMLImageElement>(null);
     const rightCircle = useRef<HTMLImageElement>(null);
+
+
 
     const isMobile = window.innerWidth < 768;
 
@@ -118,7 +124,6 @@ export default function ResumePage(): React.ReactElement {
         }
     }, [adviceDone, advice]);
 
-    // File handling
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -185,7 +190,7 @@ export default function ResumePage(): React.ReactElement {
 
     const getText = async(): Promise<string | null> => {
         try {
-            const response = await fetch(`http://192.168.1.4:8080/text`);
+            const response = await fetch(`http://localhost:8080/text`);
             if (!response.ok) {
                 throw new Error('Failed to fetch resume text');
             }
@@ -510,38 +515,70 @@ CRITICAL INSTRUCTION: You MUST NOT fabricate or assume sections that don't exist
 Keep total response under 200 words. Be decisive, specific, and unapologetically honest about resume quality.`;
 
 
-
     const handleOllama = async(data: ResumeData) => {
         setAiLoading(true);
-
+        const apiKey = import.meta.env.VITE_HF_API_KEY;
+        const client = new InferenceClient(apiKey);
         const resumeText = await getText();
+        const prompt = prepend + resumeText;
+        console.log("res" + resumeText)
 
-        const response = await fetch("http://localhost:11434/api/generate", {
-            method: "POST",
-            headers: {
-                "Content-type": "application/json"
-            },
-
-            body: JSON.stringify({
-                model: "gemma3:12b",
-                prompt: prepend + resumeText,
-                stream: false,
-            }),
-        })
-
-        const aiResponse = await response.json();
-
-        if(aiResponse === null || !aiResponse || aiResponse.length === 0){
-            setAiLoading(true);
-
-        }else{
+        try {
+            const chatCompletion = await client.chatCompletion({
+                provider: "nebius",
+                model: "meta-llama/Llama-3.1-8B-Instruct",
+                messages: [
+                    {
+                        role: "user",
+                        content: prompt,
+                    },
+                ],
+                temperature: 0.6,
+                max_tokens: 300,
+                top_p: 0.9,
+            });
+            setAI(chatCompletion.choices[0].message.content);
+            setShowAdvice(true)
             setAiLoading(false);
+            console.log(chatCompletion.choices[0].message);
+            return chatCompletion.choices[0].message;
+        } catch (error) {
+            console.error("Error fetching chat completion:", error);
+            throw error;
         }
 
-        setAI(aiResponse.response)
-        setShowAdvice(true)
-        setAiLoading(false);
-        console.log(ai);
+
+        // const aiResponse = await response.json();
+        // console.log(aiResponse)
+        // console.log(data);
+
+        // console.log(aiResponse);
+        // return aiResponse;
+
+        // const resumeText = await getText();
+        //
+        // const response = await fetch("http://localhost:11434/api/generate", {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-type": "application/json"
+        //     },
+        //
+        //     body: JSON.stringify({
+        //         model: "gemma3:12b",
+        //         prompt: prepend + resumeText,
+        //         stream: false,
+        //     }),
+        // })
+        //
+        // const aiResponse = await response.json();
+
+        // if(aiResponse === null || !aiResponse || aiResponse.length === 0){
+        //     setAiLoading(true);
+        //
+        // }else{
+        //     setAiLoading(false);
+        // }
+
 
     }
     return (
