@@ -168,18 +168,19 @@ export default function RewritePage() {
             <nav className="bg-white shadow-sm">
                 <div className="max-w-7xl px-4 sm:px-6 py-2 flex items-center">
                     <Link to="/" className="text-xl md:text-3xl font-bold text-blue-600">
-                        JobTrackr
+                        PathToHire
                     </Link>
                     <div className="ml-4 flex gap-4 font-medium text-sm">
-                        <Link to="/home" className="text-gray-700 hover:text-blue-600">
+                        <Link to="/scan" className="text-gray-700 hover:text-blue-600">
                             Resume scanner
                         </Link>
-                        <Link to="/scan" className="text-gray-700 hover:text-blue-600">
+                        <Link to="/track" className="text-gray-700 hover:text-blue-600">
                             Applications
                         </Link>
-                        <Link to="/track" className="text-gray-700 hover:text-blue-600">
+                        <Link to="/calendar" className="text-gray-700 hover:text-blue-600">
                             Calendar
                         </Link>
+                        <Link to="/payments" className="text-gray-700 hover:text-blue-600">Plans</Link>
                     </div>
                 </div>
             </nav>

@@ -15,9 +15,9 @@ import google from "./assets/google.png"
 
 const faqs = [
     {
-        question: "What is JobTrackr?",
+        question: "What is PathToHire?",
         answer:
-            "JobTrackr is a tool that helps you track job applications, scan resumes, and compare them to job descriptions using AI.",
+            "PathToHire is a tool that helps you track job applications, scan resumes, and compare them to job descriptions using AI.",
     },
     {
         question: "How does the resume scanner work?",
@@ -220,11 +220,11 @@ export default function Landing() {
                     <Link to="/home">
                         <img
                             src={myImage}
-                            alt="JobTrackr Logo"
+                            alt="PathToHire Logo"
                             className="h-12 md:h-16"
                         />
                     </Link>
-                    <span className="text-2xl md:text-3xl font-bold text-blue-600">JobTrackr</span>
+                    <span className="text-2xl md:text-3xl font-bold text-blue-600">PathToHire</span>
 
                 </div>
             </nav>
@@ -241,7 +241,7 @@ export default function Landing() {
                                                                                            stroke-linejoin="round"
                                                                                            className="lucide lucide-arrow-right-icon lucide-arrow-right"><path
                             d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span> <span ref={jb}
-                                                                                           className="bg-gradient-to-r from-indigo-600 to-purple-500 text-transparent bg-clip-text p-1 transform -rotate-1">JobTrackr</span>
+                                                                                           className="bg-gradient-to-r from-indigo-600 to-purple-500 text-transparent bg-clip-text p-1 transform -rotate-1">PathToHire</span>
                         </span>
                         <span className="flex justify-center items-center text-2xl md:text-3xl mb-6 font-normal gap-2">
                             Track
@@ -377,7 +377,7 @@ export default function Landing() {
             </div>
             <div className="grid grid-cols-auto  md:grid-cols-[1fr_1fr] gap-14 justify-center h-100 md:w-[calc(100%-180px)] px-45 mx-auto mt-4 mb-18">
 
-                <motion.div className="p-[.15rem] rounded-lg bg-gradient-to-r from-gray-500 to-gray-700 "
+                <motion.div className="p-[.15rem] rounded-lg bg-gradient-to-r from-gray-500 to-gray-700"
                     whileHover={{scale: 1.01,animationDuration:2}}
                 >
                     <div className="bg-white rounded-md p-6 h-full px-5 py-2.5n   dark:hover:bg-slate-100 shadow relative before:absolute before:inset-0 before:rounded-[inherit] before:bg-[linear-gradient(45deg,transparent_25%,theme(colors.white/.5)_50%,transparent_75%,transparent_100%)] dark:before:bg-[linear-gradient(45deg,transparent_25%,theme(colors.white)_50%,transparent_75%,transparent_100%)] before:bg-[length:250%_250%,100%_100%] before:bg-[position:200%_0,0_0] before:bg-no-repeat before:[transition:background-position_0s_ease] hover:before:bg-[position:-100%_0,0_0] hover:before:duration-[1500ms]">
@@ -544,7 +544,7 @@ export default function Landing() {
 
             <footer className="mt-12 py-6 bg-white bg-opacity-80">
                 <div className="relative max-w-7xl mx-auto px-4 sm:px-6 text-center text-gray-600">
-                    <span className="absolute left-0 bottom-0">© 2025 JobTrackr. All rights reserved.</span>
+                    <span className="absolute left-0 bottom-0">© 2025 PathToHire. All rights reserved.</span>
                     <Link to="/terms-of-service"><span className="p-4">Terms Of Service</span></Link>
                     <Link to="/privacy-policy"><span className="p-4">Privacy Policy</span></Link>
                 </div>

@@ -6,6 +6,7 @@ import { Player } from '@lottiefiles/react-lottie-player';
 import './App.css';
 import gsap from 'gsap';
 import loader from "./assets/loading.gif";
+import {Link} from "react-router-dom";
 
 interface FileWithPath extends File {
     path?: string;
@@ -34,6 +35,26 @@ export default function Dropzone(): React.ReactElement {
     const to = useRef(null);
     const the = useRef(null);
     const multiverse = useRef(null);
+
+    const [paid, setPaid] = useState<boolean>(false);
+
+    useEffect(() => {
+
+        async function fetchPaidStatus() {
+            try {
+                const timer = setTimeout(async () => {
+                    const response = await fetch('http://localhost:8080/haspaid');
+                    const hasPaid = await response.json();
+                    setPaid(hasPaid)
+                    console.log(hasPaid);
+                },100);
+                return () => clearTimeout(timer);
+
+            } catch (error) {
+                console.error(error);
+            }
+        }fetchPaidStatus()
+    }, []);
 
     useEffect(() => {
         if (imLoading) {
@@ -560,7 +581,8 @@ export default function Dropzone(): React.ReactElement {
 
                     <div className="border rounded-xl p-6 shadow-sm">
                         <h2 className="text-lg font-medium text-gray-800 mb-4">Suggested Improvements</h2>
-                        {!imLoading ? (
+                    {paid ?(
+                        !imLoading ? (
                             <ul className="list-disc pl-6 space-y-2 text-gray-700 text-left font-comic">
                                 {formatText(improv)}
                             </ul>
@@ -576,7 +598,39 @@ export default function Dropzone(): React.ReactElement {
                                     <span ref={multiverse} className="text-gray-400" style={{ position: 'relative', display: 'inline-block' }}>multiverse</span>
                                 </div>
                             </div>
-                        )}
+                        )
+                        ) : (
+                        <motion.div className="flex flex-col items-center justify-center p-8 bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200 rounded-xl shadow-sm max-w-md mx-auto"
+                        whileHover={{scale:1.02}}>
+                            <div
+                                className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full mb-4 shadow-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" className="lucide lucide-lock-icon lucide-lock">
+                                    <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                            </div>
+
+                            <h3 className="text-xl font-bold text-slate-800 mb-2 text-center">
+                                Premium Feature
+                            </h3>
+
+                            <p className="text-slate-600 text-center mb-6 leading-relaxed">
+                                This feature requires a paid subscription to access
+                            </p>
+                            <Link to="/payments">
+                                <motion.button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-md hover:shadow-lg"
+                                whileTap={{scale:.97}}>
+                                    Upgrade Now
+                                </motion.button>
+                            </Link>
+
+                            <p className="text-xs text-slate-500 mt-4 text-center">
+                                Unlock all premium features and get unlimited access
+                            </p>
+                        </motion.div>
+                    )}
                     </div>
 
 
@@ -584,9 +638,10 @@ export default function Dropzone(): React.ReactElement {
 
                 <div className="flex justify-center space-x-4 mb-8">
                     <motion.button
-                        whileHover={{scale:1.02}}
-                        whileTap={{scale:0.98}}
-                        onClick={() => {showResults(false);
+                        whileHover={{scale: 1.02}}
+                        whileTap={{scale: 0.98}}
+                        onClick={() => {
+                            showResults(false);
                             setForm(initialState);
                             isLoading(false)
                         }}
@@ -600,7 +655,7 @@ export default function Dropzone(): React.ReactElement {
                 </div>
 
                 <div className="border rounded-xl p-6 shadow-sm mb-6">
-                    <h2 className="text-lg font-medium text-gray-800 mb-4">Resume Optimization Tips <span className="text-xs text-gray-500">from<span> jobtrackr</span></span></h2>
+                    <h2 className="text-lg font-medium text-gray-800 mb-4">Resume Optimization Tips <span className="text-xs text-gray-500">from<span> PathToHire</span></span></h2>
                     <p className="text-gray-600 mb-4">Based on common patterns, here are a few ways to improve your resume:</p>
                     <div className="space-y-3">
                         <div className="flex items-start gap-2">

@@ -12,27 +12,34 @@ import RewritePage from "./Rewrite.tsx";
 import TermsPage from "./terms.tsx";
 import PrivacyPolicy from "./pp.tsx"
 import TestPage from "./testtimeline.tsx";
+import PaymentsPage from "./Payments.tsx";
+import { AuthProvider } from './AuthContext';
+import ProtectedRoute from './ProtectedRoute';
 
 export default function App() {
 
   return (
 
-   <BrowserRouter>
-     <Routes>
-       <Route path="/" element={<Landing/>}></Route>
-       <Route path="/home" element={<Home/>}></Route>
-       <Route path="/login" element={<LoginPage/>}></Route>
-       <Route path="/signup" element={<SignupPage/>}></Route>
-       <Route path="/scan" element={<ResumePage/>}></Route>
-       <Route path="/chat" element={<ChatPage/>}></Route>
-       <Route path="/track" element={<TrackPage/>}></Route>
-       <Route path="/calendar" element={<CalendarPage/>}></Route>
-       <Route path="/rewrite" element={<RewritePage/>}></Route>
-       <Route path="/terms-of-service" element={<TermsPage/>}></Route>
-       <Route path="/privacy-policy" element={<PrivacyPolicy/>}></Route>
-       <Route path="/test" element={<TestPage/>}></Route>
-    </Routes>
-   </BrowserRouter>
+      <AuthProvider>
+         <BrowserRouter>
+           <Routes>
+             <Route path="/" element={<Landing />} />
+             <Route path="/login" element={<LoginPage />} />
+             <Route path="/signup" element={<SignupPage />} />
+             <Route path="/terms-of-service" element={<TermsPage />} />
+             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+
+             <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+             <Route path="/scan" element={<ProtectedRoute><ResumePage /></ProtectedRoute>} />
+             <Route path="/chat" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
+             <Route path="/track" element={<ProtectedRoute><TrackPage /></ProtectedRoute>} />
+             <Route path="/calendar" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} />
+             <Route path="/rewrite" element={<ProtectedRoute><RewritePage /></ProtectedRoute>} />
+             <Route path="/test" element={<ProtectedRoute><TestPage /></ProtectedRoute>} />
+             <Route path="/payments" element={<ProtectedRoute><PaymentsPage /></ProtectedRoute>} />
+          </Routes>
+         </BrowserRouter>
+      </AuthProvider>
   )
 }
 

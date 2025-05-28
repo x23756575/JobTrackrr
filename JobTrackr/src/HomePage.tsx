@@ -6,7 +6,7 @@ import docx from './assets/docx.png';
 import Dropzone from "./Dropzone.tsx"
 import axios from "axios";
 import * as cheerio from "cheerio";
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import { motion } from 'framer-motion';
 
 
@@ -14,6 +14,24 @@ export default function Home() {
 
     const navigate = useNavigate();
     const imageCSS = "h-[22px] w-[22px] ml-2"
+    const [paid, setPaid] = useState<boolean>(false);
+    useEffect(() => {
+
+        async function fetchPaidStatus() {
+            try {
+                const timer = setTimeout(async () => {
+                    const response = await fetch('http://localhost:8080/haspaid');
+                    const hasPaid = await response.json();
+                    setPaid(hasPaid)
+                    console.log(hasPaid);
+                },50);
+                return () => clearTimeout(timer);
+
+            } catch (error) {
+                console.error(error);
+            }
+        }fetchPaidStatus()
+    }, []);
 
     return (
         <div className="min-h-screen bg-white">
@@ -22,16 +40,75 @@ export default function Home() {
                 <div className="max-w-7xl px-4 sm:px-6 py-2 flex items-center">
 
                     <Link to="/" className="flex items-center">
-                        <span className="text-xl md:text-3xl font-bold text-blue-600">JobTrackr</span>
+                        <span className="text-xl md:text-3xl font-bold text-blue-600">PathToHire</span>
                     </Link>
 
                     <div className="flex justify-start gap-4 font-medium md:text-sm text-xs items-center ml-3 pt-1">
-                        <Link to="/home" className="text-gray-700 hover:text-blue-600">Resume scanner</Link>
-                        <Link to="/scan" className="text-gray-700 hover:text-blue-600">Applications</Link>
-                        <Link to="/track" className="text-gray-700 hover:text-blue-600">Calendar</Link>
-                    </div>
+                        <Link to="/scan" className="text-gray-700 hover:text-blue-600">Resume scanner</Link>
+                        <Link to="/track" className="text-gray-700 hover:text-blue-600">Applications</Link>
+                        <Link to="/calendar" className="text-gray-700 hover:text-blue-600">Calendar</Link>
+                        <Link to="/rewrite" className="text-gray-700 hover:text-blue-600">Rephrase your resume</Link>
+                        <Link to="/payments" className="text-gray-700 hover:text-blue-600">Plans</Link>
 
+                    </div>
+                    {paid ? (
+                        <motion.div
+                            className="p-2 px-4 absolute top-3 right-5 text-white font-bold rounded-xl bg-gradient-to-r from-indigo-600 to-purple-500 shadow-lg border border-white/20 backdrop-blur-sm"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            whileHover={{
+                                scale: 1.05,
+                                rotate: [0, -1, 1, 0],
+                                boxShadow: "0 20px 25px -5px rgba(99, 102, 241, 0.4)"
+                            }}
+                            whileTap={{ scale: 0.98 }}
+                            transition={{
+                                type: "spring",
+                                stiffness: 400,
+                                damping: 10,
+                                hover: { duration: 0.3 }
+                            }}
+                        >
+                            <div className="flex items-center gap-2">
+                                <span className="text-sm tracking-wide">Employed Tier</span>
+                            </div>
+                            <motion.div
+                                className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent rounded-xl"
+                                animate={{ x: [-100, 100] }}
+                                transition={{
+                                    duration: 3,
+                                    repeat: Infinity,
+                                    ease: "linear"
+                                }}
+                            />
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            className="p-1 px-4 absolute top-1 right-5 text-white font-bold rounded-xl bg-gradient-to-r from-gray-500 to-gray-700 shadow-lg border border-white/20"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            whileHover={{
+                                scale: 1.05,
+                                boxShadow: "0 20px 25px -5px rgba(107, 114, 128, 0.4)"
+                            }}
+                            whileTap={{ scale: 0.98 }}
+                            transition={{
+                                type: "spring",
+                                stiffness: 400,
+                                damping: 10
+                            }}
+                        >
+                            <div className="flex items-center gap-2">
+
+                                <span className="text-sm tracking-wide">Jobless</span>
+                            </div>
+                            <div className="text-xs pr-1 mr-5 opacity-90 font-medium">
+                                Free tier
+                            </div>
+                        </motion.div>
+                    )}
                 </div>
+
             </nav>
 
             <div className="grid grid-cols-1 md:grid-cols-[70%_auto] gap-4 p-4 min-h-[calc(100vh-100px)]">

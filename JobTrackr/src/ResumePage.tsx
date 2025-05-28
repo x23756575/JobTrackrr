@@ -10,7 +10,7 @@ import robot from "./assets/robot.png";
 import bg from "./assets/jbg.png";
 import circle from "./assets/greycircle.png";
 import { InferenceClient } from "@huggingface/inference";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import { OpenAI } from "openai";
 
 
@@ -41,12 +41,14 @@ export default function ResumePage(): React.ReactElement {
     const [result,setResult] = useState<string>('');
     const [aiLoading, setAiLoading] = useState<boolean>(false);
     const [matchScore, setMatchScore] = useState<number>(0);
+    const [paid, setPaid] = useState<boolean>(false);
 
 
     const leftCircle = useRef<HTMLImageElement>(null);
     const middleCircle = useRef<HTMLImageElement>(null);
     const rightCircle = useRef<HTMLImageElement>(null);
 
+    const navigate = useNavigate();
 
 
     const isMobile = window.innerWidth < 768;
@@ -82,6 +84,23 @@ export default function ResumePage(): React.ReactElement {
 
     }, []);
 
+    useEffect(() => {
+
+        async function fetchPaidStatus() {
+            try {
+                const timer = setTimeout(async () => {
+                    const response = await fetch('http://localhost:8080/haspaid');
+                    const hasPaid = await response.json();
+                    setPaid(hasPaid)
+                    console.log(hasPaid);
+                },100);
+                return () => clearTimeout(timer);
+
+            } catch (error) {
+                console.error(error);
+            }
+        }fetchPaidStatus()
+    }, []);
 
 
     const [scores, setScores] = useState({
@@ -92,7 +111,6 @@ export default function ResumePage(): React.ReactElement {
     });
     const [adviceDone, setAdviceDone] = useState<boolean>(false);
 
-    // Animation variants
     const containerVariants = {
         hidden: { opacity: 0, y: 20 },
         visible: {
@@ -162,6 +180,7 @@ export default function ResumePage(): React.ReactElement {
             setIsLoading(false);
         }
     };
+
 
     const calculateMessage = (data: ResumeData) => {
         const getScoreMessage = (score: number, max: number): ScoreMessage => {
@@ -516,6 +535,11 @@ Keep total response under 200 words. Be decisive, specific, and unapologetically
 
 
     const handleOllama = async(data: ResumeData) => {
+
+        if(!paid){
+            navigate('/payments')
+            return;
+        }
         setAiLoading(true);
         const apiKey = import.meta.env.VITE_HF_API_KEY;
         const client = new InferenceClient(apiKey);
@@ -591,13 +615,15 @@ Keep total response under 200 words. Be decisive, specific, and unapologetically
                 <div className="max-w-7xl px-4 sm:px-6 py-2 flex items-center">
 
                     <Link to="/" className="flex items-center">
-                        <span className="text-xl md:text-3xl font-bold text-blue-600">JobTrackr</span>
+                        <span className="text-xl md:text-3xl font-bold text-blue-600">PathToHire</span>
                     </Link>
 
                     <div className="flex justify-start gap-6 font-medium md:text-sm text-xs items-center ml-3 pt-1">
                         <Link to="/home" className="text-gray-700 hover:text-blue-600">Home</Link>
                         <Link to="/calendar" className="text-gray-700 hover:text-blue-600">Calendar</Link>
                         <Link to="/track" className="text-gray-700 hover:text-blue-600">Applications</Link>
+                        <Link to="/rewrite" className="text-gray-700 hover:text-blue-600">Rephrase your resume</Link>
+                        <Link to="/payments" className="text-gray-700 hover:text-blue-600">Plans</Link>
                     </div>
 
                 </div>
@@ -685,7 +711,6 @@ Keep total response under 200 words. Be decisive, specific, and unapologetically
                                 </div>
                             </motion.div>
 
-                            {/* AI Assistant section */}
                             <div className="lg:col-span-3">
                                 <motion.div
                                     className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-8 border border-gray-200"
@@ -718,6 +743,7 @@ Keep total response under 200 words. Be decisive, specific, and unapologetically
                                             whileHover={{ scale: 1.02 }}
                                             whileTap={{ scale: 0.98 }}
                                             className={`w-full py-6 px-6 relative rounded-xl font-extrabold text-3xl ${aiLoading ? 'bg-white': 'bg-gradient-to-r from-blue-600 to-indigo-600'  } m`}
+
                                             onClick={() => resumeData && handleOllama(resumeData)}
                                         >
                                             {aiLoading ? (

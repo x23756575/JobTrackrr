@@ -8,7 +8,7 @@ export default function Terms() {
         <nav className="bg-white shadow-sm relative">
             <div className="max-w-7xl mx-auto py-2 flex justify-center items-center">
 
-                <span className="text-3xl md:text-4xl font-bold text-blue-600">JobTrackr</span>
+                <span className="text-3xl md:text-4xl font-bold text-blue-600">PathToHire</span>
 
             </div>
         </nav>
@@ -21,7 +21,7 @@ export default function Terms() {
             <p style={styles.lastUpdated}>Last Updated: 26/5/2025</p>
 
             <p>
-                Welcome to <strong>JobTrackr</strong> (“we,” “our,” or “us”). By using our website and services (“Service”), you agree to the following terms and conditions. Please read them carefully.
+                Welcome to <strong>PathToHire</strong> (“we,” “our,” or “us”). By using our website and services (“Service”), you agree to the following terms and conditions. Please read them carefully.
             </p>
 
             <section style={styles.section}>
@@ -34,7 +34,7 @@ export default function Terms() {
             <section style={styles.section}>
                 <h2 style={styles.heading}>2. Description of Service</h2>
                 <p>
-                    <strong>JobTrackr</strong>is a platform that helps users organize and track their job applications,scan there resume for feedback, receive feedback from AI assistant using gemma3, rewrite the resume and access paid services to enhance their job search experience. We store limited personal information such as your email address and application data you submit. We do <strong>not</strong> store resumes or other documents unless explicitly stated.
+                    <strong>PathToHire</strong>is a platform that helps users organize and track their job applications,scan there resume for feedback, receive feedback from AI assistant using gemma3, rewrite the resume and access paid services to enhance their job search experience. We store limited personal information such as your email address and application data you submit. We do <strong>not</strong> store resumes or other documents unless explicitly stated.
                 </p>
             </section>
 
@@ -79,7 +79,7 @@ export default function Terms() {
             <section style={styles.section}>
                 <h2 style={styles.heading}>7. Limitation of Liability</h2>
                 <p>
-                    To the fullest extent permitted by law, <strong>JobTrackr</strong> and its affiliates are <strong>not liable</strong> for any indirect, incidental, special, consequential, or punitive damages arising out of your use of the Service.
+                    To the fullest extent permitted by law, <strong>PathToHire</strong> and its affiliates are <strong>not liable</strong> for any indirect, incidental, special, consequential, or punitive damages arising out of your use of the Service.
                 </p>
                 <p>
                     Our total liability to you for any claims related to the Service will not exceed the amount you have paid us in the last six months.
@@ -114,7 +114,7 @@ export default function Terms() {
                 <h2 style={styles.heading}>11. Contact Us</h2>
                 <p>If you have questions about these Terms, please contact us at:</p>
                 <address style={styles.address}>
-                    JobTrackr <br />
+                    PathToHire <br />
                     Email: <a href="mailto:samore123ash@gmail.com" style={styles.link}>samore123ash@gmail.com</a> <br />
                     Address: Ashbourne, Meath
                 </address>

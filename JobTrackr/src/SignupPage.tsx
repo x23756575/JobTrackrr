@@ -69,7 +69,7 @@ function SignupPage() {
                 </div>
                 <div className = "text-center mb-5 text-xl font-semibold">
 
-                    Create an account with JobTrackr
+                    Create an account with PathToHire
 
                 </div>
 

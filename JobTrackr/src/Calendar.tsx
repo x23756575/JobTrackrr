@@ -60,13 +60,15 @@ return(
                 <div className="max-w-7xl px-4 sm:px-6 py-2 flex items-center">
 
                     <Link to="/" className="flex items-center">
-                        <span className="text-xl md:text-3xl font-bold text-blue-600">JobTrackr</span>
+                        <span className="text-xl md:text-3xl font-bold text-blue-600">PathToHire</span>
                     </Link>
 
                     <div className="flex justify-start gap-6 font-medium md:text-sm text-xs items-center ml-3 pt-1">
                         <Link to="/home" className="text-gray-700 hover:text-blue-600">Home</Link>
                         <Link to="/scan" className="text-gray-700 hover:text-blue-600">Resume scanner</Link>
                         <Link to="/track" className="text-gray-700 hover:text-blue-600">Applications</Link>
+                        <Link to="/rewrite" className="text-gray-700 hover:text-blue-600">Rephrase your resume</Link>
+                        <Link to="/payments" className="text-gray-700 hover:text-blue-600">Plans</Link>
                     </div>
 
                 </div>
