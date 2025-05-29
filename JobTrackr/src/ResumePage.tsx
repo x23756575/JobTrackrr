@@ -30,6 +30,8 @@ interface ScoreMessage {
 
 export default function ResumePage(): React.ReactElement {
 
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [resumeData, setResumeData] = useState<ResumeData | null>(null);
@@ -89,7 +91,7 @@ export default function ResumePage(): React.ReactElement {
         async function fetchPaidStatus() {
             try {
                 const timer = setTimeout(async () => {
-                    const response = await fetch('http://localhost:8080/haspaid');
+                    const response = await fetch(`${apiBaseUrl}/haspaid`);
                     const hasPaid = await response.json();
                     setPaid(hasPaid)
                     console.log(hasPaid);
@@ -161,7 +163,7 @@ export default function ResumePage(): React.ReactElement {
         formData.append('file', selectedFile);
 
         try {
-            const response = await axios.post('http://192.168.1.4:8080/resume', formData, {
+            const response = await axios.post(`${apiBaseUrl}/resume`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
             console.log(response.data)
@@ -209,7 +211,7 @@ export default function ResumePage(): React.ReactElement {
 
     const getText = async(): Promise<string | null> => {
         try {
-            const response = await fetch(`http://localhost:8080/text`);
+            const response = await fetch(`${apiBaseUrl}/text`);
             if (!response.ok) {
                 throw new Error('Failed to fetch resume text');
             }

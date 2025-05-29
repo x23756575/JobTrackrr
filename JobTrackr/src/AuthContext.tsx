@@ -14,11 +14,14 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
+
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
     const [user, setUser] = useState<User | null>(null);
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
-        fetch("http://localhost:8080/id", { credentials: "include" })
+        fetch(`${apiBaseUrl}/id`, { credentials: "include" })
             .then(res => (res.ok ? res.json() : null))
             .then(data => {
                 setUser(data);

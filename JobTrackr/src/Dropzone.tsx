@@ -7,6 +7,7 @@ import './App.css';
 import gsap from 'gsap';
 import loader from "./assets/loading.gif";
 import {Link} from "react-router-dom";
+import {InferenceClient} from "@huggingface/inference";
 
 interface FileWithPath extends File {
     path?: string;
@@ -18,6 +19,8 @@ interface fileDesc {
 }
 
 export default function Dropzone(): React.ReactElement {
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
     const dropzoneRef = useRef<DropzoneRef>(null);
     const [results, showResults] = useState<boolean>(false);
     const [hovered, setHovered] = useState<boolean>(false);
@@ -43,7 +46,7 @@ export default function Dropzone(): React.ReactElement {
         async function fetchPaidStatus() {
             try {
                 const timer = setTimeout(async () => {
-                    const response = await fetch('http://localhost:8080/haspaid');
+                    const response = await fetch(`${apiBaseUrl}/haspaid`);
                     const hasPaid = await response.json();
                     setPaid(hasPaid)
                     console.log(hasPaid);
@@ -290,7 +293,7 @@ export default function Dropzone(): React.ReactElement {
         data.append('jobDesc', form.jobDesc);
 
         try {
-            const response = await fetch('http://localhost:8080/compareresume', {
+            const response = await fetch(`${apiBaseUrl}/compareresume`, {
                 method: 'POST',
                 body: data,
             });
@@ -318,20 +321,35 @@ export default function Dropzone(): React.ReactElement {
                 console.log("test 1")
                 isLoading(true);
                 setImLoading(true);
+                const apiKey = import.meta.env.VITE_HF_API_KEY;
+                const client = new InferenceClient(apiKey);
 
-
-                    const response = await fetch("http://localhost:11434/api/generate", {
-                        method: "POST",
-                        headers: {
-                            "Content-type": "application/json"
+                const chatCompletion = await client.chatCompletion({
+                    provider: "nebius",
+                    model: "meta-llama/Llama-3.1-8B-Instruct",
+                    messages: [
+                        {
+                            role: "user",
+                            content: prepend + text.missedKeywords,
                         },
-
-                        body: JSON.stringify({
-                            model: "gemma3:12b",
-                            prompt: prepend + text.missedKeywords,
-                            stream: false,
-                        }),
-                    })
+                    ],
+                    temperature: 0.6,
+                    max_tokens: 300,
+                    top_p: 0.9,
+                });
+                setImprov(chatCompletion.choices[0].message.content);
+                //     const response = await fetch("http://localhost:11434/api/generate", {
+                //         method: "POST",
+                //         headers: {
+                //             "Content-type": "application/json"
+                //         },
+                //
+                //         body: JSON.stringify({
+                //             model: "gemma3:12b",
+                //             prompt: prepend + text.missedKeywords,
+                //             stream: false,
+                //         }),
+                //     })
                     if(response.ok){
                         setImLoading(false);
                         setDone(true);
@@ -343,7 +361,7 @@ export default function Dropzone(): React.ReactElement {
                         setDone(true);
                     }
                     console.log(aiResponse.response);
-                    setImprov(aiResponse.response)
+                    // setImprov(aiResponse.response)
                     setDone(prev => !prev)
                 setImLoading(false)
 

@@ -73,6 +73,8 @@ const faqs = [
 
 export default function Landing() {
 
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_GOOGLE;
+
     const leftCard = useRef(null);
     const rightCard = useRef(null);
     const thirdCenterCard = useRef(null);
@@ -273,7 +275,7 @@ export default function Landing() {
                             whileHover={{scale:1.02}}
                             whileTap={{scale:0.98}}
                             >
-                            <a href="http://localhost:8080/oauth2/authorization/google">
+                            <a href={`${apiBaseUrl}/oauth2/authorization/google`}>
                             <div
                                 className="flex items-center gap-3 px-6 py-3 font-medium border border-gray-200 rounded-lg shadow-sm hover:bg-blue-50 transition-colors duration-200"
                             >

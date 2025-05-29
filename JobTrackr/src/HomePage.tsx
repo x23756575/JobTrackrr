@@ -12,20 +12,24 @@ import { motion } from 'framer-motion';
 
 export default function Home() {
 
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
     const navigate = useNavigate();
     const imageCSS = "h-[22px] w-[22px] ml-2"
     const [paid, setPaid] = useState<boolean>(false);
+    const mobile = window.innerWidth < 702;
     useEffect(() => {
 
         async function fetchPaidStatus() {
             try {
-                const timer = setTimeout(async () => {
-                    const response = await fetch('http://localhost:8080/haspaid');
+                const response = await fetch(`${apiBaseUrl}/haspaid`, {
+                    credentials: "include"
+                });
+
                     const hasPaid = await response.json();
-                    setPaid(hasPaid)
+                    console.log('before',hasPaid)
+                    setPaid(Boolean(hasPaid));
                     console.log(hasPaid);
-                },50);
-                return () => clearTimeout(timer);
 
             } catch (error) {
                 console.error(error);
@@ -51,7 +55,8 @@ export default function Home() {
                         <Link to="/payments" className="text-gray-700 hover:text-blue-600">Plans</Link>
 
                     </div>
-                    {paid ? (
+                    {!mobile && (
+                    paid ? (
                         <motion.div
                             className="p-2 px-4 absolute top-3 right-5 text-white font-bold rounded-xl bg-gradient-to-r from-indigo-600 to-purple-500 shadow-lg border border-white/20 backdrop-blur-sm"
                             initial={{ opacity: 0, y: -10 }}
@@ -99,14 +104,15 @@ export default function Home() {
                             }}
                         >
                             <div className="flex items-center gap-2">
-
                                 <span className="text-sm tracking-wide">Jobless</span>
                             </div>
                             <div className="text-xs pr-1 mr-5 opacity-90 font-medium">
                                 Free tier
                             </div>
                         </motion.div>
+                    )
                     )}
+
                 </div>
 
             </nav>

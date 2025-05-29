@@ -75,6 +75,8 @@ export default function TrackPage(){
     const [tlJob, setTlJob] = useState<string>('');
     const [clickedTL, setClicked] = useState<string>('');
 
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
     const appData = useRef(null);
 
     const initialStats : appStats = {
@@ -126,7 +128,7 @@ export default function TrackPage(){
     }, [hideForm, hideEdit]);
 
     useEffect(() => {
-        fetch('http://localhost:8080/appdata')
+        fetch(`${apiBaseUrl}/appdata`)
             .then(response => {
                 console.log(response);
                 return response.json();
@@ -164,7 +166,7 @@ export default function TrackPage(){
         console.log("submitted")
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8080/application', form)
+            const response = await axios.post(`${apiBaseUrl}/application`, form)
 
             if(response.status === 200){
                 setHideForm(true)
@@ -182,10 +184,10 @@ export default function TrackPage(){
     const handleEdit = async(e: FormEvent<HTMLFormElement>): Promise<void> => {
         console.log("submitted")
         try {
-            const response = await axios.post('http://localhost:8080/editapp', editForm)
+            const response = await axios.post(`${apiBaseUrl}/editapp`, editForm)
 
             if(response.status === 200){
-                const updated = await axios.get('http://localhost:8080/appdata');
+                const updated = await axios.get(`${apiBaseUrl}/appdata`);
                 setTrack(updated.data);
                 setTrackId(null)
                 setHideForm(true)
@@ -202,11 +204,11 @@ export default function TrackPage(){
         console.log("before delete",id)
 
         try {
-            const response = await axios.post(`http://localhost:8080/deleteapp?id=${encodeURIComponent(id)}`)
+            const response = await axios.post(`${apiBaseUrl}/deleteapp?id=${encodeURIComponent(id)}`)
 
 
             if(response.status === 200){
-                const updated = await axios.get('http://localhost:8080/appdata');
+                const updated = await axios.get(`${apiBaseUrl}/appdata`);
                 setTrack(updated.data);
                 setDeleteId(null);
                 console.log("deleted")

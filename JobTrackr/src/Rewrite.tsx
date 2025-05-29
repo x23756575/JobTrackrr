@@ -15,6 +15,10 @@ interface FileDesc {
 }
 
 export default function RewritePage() {
+
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
+
     const dropzoneRef = useRef<DropzoneRef>(null);
     const [hovered, setHovered] = useState<boolean>(false);
     // const [fileMode, setFileMode] = useState<boolean>(true);

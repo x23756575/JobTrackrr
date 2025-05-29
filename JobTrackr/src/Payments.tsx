@@ -6,10 +6,10 @@ import React from "react";
 
 
 export default function PaymentsPage(){
-
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
     async function startCheckout(userId: number) {
         try {
-            const response = await fetch(`http://localhost:8080/payments/create-checkout-session?userId=1`, {
+            const response = await fetch(`${apiBaseUrl}/payments/create-checkout-session?userId=1`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

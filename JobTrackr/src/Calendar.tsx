@@ -19,12 +19,13 @@ interface CalendarEvent{
     className?:string;
 }
 export default function CalendarPage(){
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
     const [events ,setEvents] = useState<CalendarEvent[]>([])
 
     const loadCalendar = async (): Promise<CalendarEvent[] | undefined> => {
         try {
-            const response = await axios.get<CalendarData[]>('http://localhost:8080/appdata');
+            const response = await axios.get<CalendarData[]>(`${apiBaseUrl}/appdata`);
 
             if (response.status === 200 && response.data) {
                 const events: CalendarEvent[] = response.data.map(item => ({
