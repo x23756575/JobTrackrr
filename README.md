@@ -1,19 +1,27 @@
-<h1 align="center">Welcome to JobTrackr 👋</h1>
+<h1 align="center">Welcome to PathToHire 👋</h1>
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-0.0.0-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-0.0.1-blue.svg?cacheSeconds=2592000" />
 </p>
 
-> **JobTrackr** is a tool for job seekers to manage and streamline their application process. It includes AI-powered resume scanning (via NLP), an AI assistant (powered by Ollama Mistral) that can answer questions based only on the user’s resume, a job application tracker, a home page listing job opportunities, and a messaging system for chatting with other users and employers.
+> **PathToHire** is a tool for job seekers to manage and streamline their job hunt using intelligent, resume-driven insights and organization tools. From tracking applications to AI-enhanced resume analysis, it’s built to help you stay prepared and stand out.
 
 ---
 
 ## 🚀 Features
 
-- ✅ AI resume scanner using NLP
-- 🤖 Private AI assistant (Ollama Mistral) — answers only from your resume
-- 📝 Job application tracker
-- 🏠 Home page with job listings
-- 💬 Built-in messenger for user and employer communication
+- 📄 **Resume vs Job Description Matching** — powered by Stanford CoreNLP
+- ✍️ **AI Resume Rewriter** — built with LLaMA 3.1
+- 🤖 **Resume Scanner & Assistant** — LLaMA-based assistant answers questions about your resume
+- 📌 **Application Tracker** — track status (interview, hired, rejected, offered) and view a timeline for each
+- 📅 **Calendar View** — visualize your applications by date
+- 🔐 **OAuth Login** — sign in securely with Google
+- 💳 **Stripe Payment Plans** — integrated and tested (ready for deployment)
+
+---
+
+## 🎥 Demo Video
+
+[![Watch the demo](https://img.youtube.com/vi/juEtufvDWPc/0.jpg)](https://youtu.be/juEtufvDWPc)
 
 ---
 
@@ -21,26 +29,3 @@
 
 ```bash
 npm install
-
-```
-
-## 🧪 Usage
-
-```bash
-npm run dev
-```
-
-## 🎥 Demo Video
-
-[![](https://img.youtube.com/vi/juEtufvDWPc/0.jpg)](https://youtu.be/juEtufvDWPc)
-
-## Author
-
-👤 **Sam O Reilly**
-
-* Github: [@x23756575](https://github.com/x23756575)
-* LinkedIn: [@sam-o-reilly](https://linkedin.com/in/sam-o-reilly)
-
-## Show your support
-
-Give a ⭐️ if this project helped you!
