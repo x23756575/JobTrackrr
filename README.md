@@ -9,17 +9,17 @@
 
 ## 🚀 Features
 
-- 📄 **Resume vs Job Description Matching** — powered by Stanford CoreNLP
-- ✍️ **AI Resume Rewriter** — built with LLaMA 3.1
-- 🤖 **Resume Scanner & Assistant** — LLaMA-based assistant answers questions about your resume
-- 📌 **Application Tracker** — track status (interview, hired, rejected, offered) and view a timeline for each
-- 📅 **Calendar View** — visualize your applications by date
-- 🔐 **OAuth Login** — sign in securely with Google
-- 💳 **Stripe Payment Plans** — integrated and tested (ready for deployment)
+- 📄 **Resume vs Job Description Matching** - implemented using Stanford CoreNLP
+- ✍️ **AI Resume Rewriter** - built with LLaMA 3.1
+- 🤖 **Resume Scanner & Assistant** - LLaMA-based assistant answers questions about your resume
+- 📌 **Application Tracker**- track status (interview, hired, rejected, offered) and view a timeline for each application.
+- 📅 **Calendar View** - visualize your applications by date
+- 🔐 **OAuth Login**- sign in securely with Google
+- 💳 **Stripe Payment Plans** - integrated and tested (ready for deployment)
 
 ---
 
-## 🎥 Demo Video
+## [🎥 Demo Video](https://youtu.be/juEtufvDWPc)
 
 [![Watch the demo](https://img.youtube.com/vi/juEtufvDWPc/0.jpg)](https://youtu.be/juEtufvDWPc)
 
