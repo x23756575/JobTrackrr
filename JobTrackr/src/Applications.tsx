@@ -128,7 +128,9 @@ export default function TrackPage(){
     }, [hideForm, hideEdit]);
 
     useEffect(() => {
-        fetch(`${apiBaseUrl}/appdata`)
+        fetch(`${apiBaseUrl}/appdata`, {
+            credentials: 'include',
+        })
             .then(response => {
                 console.log(response);
                 return response.json();
@@ -165,8 +167,11 @@ export default function TrackPage(){
     const handleSubmit = async(e: FormEvent<HTMLFormElement>) => {
         console.log("submitted")
         e.preventDefault();
+        console.log("adjilajdalidjaldija>>>>", form);
         try {
-            const response = await axios.post(`${apiBaseUrl}/application`, form)
+            const response = await axios.post(`${apiBaseUrl}/application`, form,{
+                withCredentials: true,
+            });
 
             if(response.status === 200){
                 setHideForm(true)
@@ -184,7 +189,9 @@ export default function TrackPage(){
     const handleEdit = async(e: FormEvent<HTMLFormElement>): Promise<void> => {
         console.log("submitted")
         try {
-            const response = await axios.post(`${apiBaseUrl}/editapp`, editForm)
+            const response = await axios.post(`${apiBaseUrl}/editapp`, editForm, {
+                withCredentials: true,
+            })
 
             if(response.status === 200){
                 const updated = await axios.get(`${apiBaseUrl}/appdata`);
@@ -204,7 +211,9 @@ export default function TrackPage(){
         console.log("before delete",id)
 
         try {
-            const response = await axios.post(`${apiBaseUrl}/deleteapp?id=${encodeURIComponent(id)}`)
+            const response = await axios.post(`${apiBaseUrl}/deleteapp?id=${encodeURIComponent(id)}`,{
+                withCredentials: true,
+            });
 
 
             if(response.status === 200){

@@ -45,13 +45,13 @@ export default function Dropzone(): React.ReactElement {
 
         async function fetchPaidStatus() {
             try {
-                const timer = setTimeout(async () => {
-                    const response = await fetch(`${apiBaseUrl}/haspaid`);
-                    const hasPaid = await response.json();
-                    setPaid(hasPaid)
-                    console.log(hasPaid);
-                },100);
-                return () => clearTimeout(timer);
+                const response = await fetch(`${apiBaseUrl}/haspaid`, {
+                    credentials: "include"
+                });
+                const hasPaid = await response.json();
+                console.log('before',hasPaid)
+                setPaid(Boolean(hasPaid));
+                console.log(hasPaid);
 
             } catch (error) {
                 console.error(error);
@@ -599,56 +599,55 @@ export default function Dropzone(): React.ReactElement {
 
                     <div className="border rounded-xl p-6 shadow-sm">
                         <h2 className="text-lg font-medium text-gray-800 mb-4">Suggested Improvements</h2>
-                    {paid ?(
-                        !imLoading ? (
-                            <ul className="list-disc pl-6 space-y-2 text-gray-700 text-left font-comic">
-                                {formatText(improv)}
-                            </ul>
-                        ) : (
-                            <div className="w-full text-center p-4" style={{ position: 'static', overflow: 'visible' }}>
-
-                                <div className="flex justify-center space-x-2" style={{ position: 'relative', height: '40px', overflow: 'visible' }}>
-                                    <span ref={sending} className="z-30 text-gray-400" style={{ position: 'relative', display: 'inline-block' }}>sending</span>
-                                    <span ref={your} className="z-30 text-gray-400" style={{ position: 'relative', display: 'inline-block' }}>your</span>
-                                    <span ref={data} className="z-30 text-gray-400" style={{ position: 'relative', display: 'inline-block' }}>data</span>
-                                    <span ref={to} className="z-30 text-gray-400" style={{ position: 'relative', display: 'inline-block' }}>to</span>
-                                    <span ref={the} className="z-30 text-gray-400" style={{ position: 'relative', display: 'inline-block' }}>the</span>
-                                    <span ref={multiverse} className="text-gray-400" style={{ position: 'relative', display: 'inline-block' }}>multiverse</span>
+                        {paid ? (
+                            !imLoading ? (
+                                <ul className="list-disc pl-6 space-y-2 text-gray-700 text-left font-comic">
+                                    {formatText(improv)}
+                                </ul>
+                            ) : (
+                                <div className="w-full text-center p-4" style={{ position: 'static', overflow: 'visible' }}>
+                                    <div className="flex justify-center space-x-2" style={{ position: 'relative', height: '40px', overflow: 'visible' }}>
+                                        <span ref={sending} className="z-30 text-gray-400" style={{ position: 'relative', display: 'inline-block' }}>sending</span>
+                                        <span ref={your} className="z-30 text-gray-400" style={{ position: 'relative', display: 'inline-block' }}>your</span>
+                                        <span ref={data} className="z-30 text-gray-400" style={{ position: 'relative', display: 'inline-block' }}>data</span>
+                                        <span ref={to} className="z-30 text-gray-400" style={{ position: 'relative', display: 'inline-block' }}>to</span>
+                                        <span ref={the} className="z-30 text-gray-400" style={{ position: 'relative', display: 'inline-block' }}>the</span>
+                                        <span ref={multiverse} className="text-gray-400" style={{ position: 'relative', display: 'inline-block' }}>multiverse</span>
+                                    </div>
                                 </div>
-                            </div>
-                        )
+                            )
                         ) : (
-                        <motion.div className="flex flex-col items-center justify-center p-8 bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200 rounded-xl shadow-sm max-w-md mx-auto"
-                        whileHover={{scale:1.02}}>
-                            <div
-                                className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full mb-4 shadow-lg">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                     stroke-linejoin="round" className="lucide lucide-lock-icon lucide-lock">
-                                    <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
-                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                                </svg>
-                            </div>
+                            <motion.div className="flex flex-col items-center justify-center p-8 bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200 rounded-xl shadow-sm max-w-md mx-auto"
+                                        whileHover={{scale:1.02}}>
+                                <div
+                                    className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full mb-4 shadow-lg">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                                         strokeLinejoin="round" className="lucide lucide-lock-icon lucide-lock">
+                                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                    </svg>
+                                </div>
 
-                            <h3 className="text-xl font-bold text-slate-800 mb-2 text-center">
-                                Premium Feature
-                            </h3>
+                                <h3 className="text-xl font-bold text-slate-800 mb-2 text-center">
+                                    Premium Feature
+                                </h3>
 
-                            <p className="text-slate-600 text-center mb-6 leading-relaxed">
-                                This feature requires a paid subscription to access
-                            </p>
-                            <Link to="/payments">
-                                <motion.button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-md hover:shadow-lg"
-                                whileTap={{scale:.97}}>
-                                    Upgrade Now
-                                </motion.button>
-                            </Link>
+                                <p className="text-slate-600 text-center mb-6 leading-relaxed">
+                                    This feature requires a paid subscription to access
+                                </p>
+                                <Link to="/payments">
+                                    <motion.button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-md hover:shadow-lg"
+                                                   whileTap={{scale:.97}}>
+                                        Upgrade Now
+                                    </motion.button>
+                                </Link>
 
-                            <p className="text-xs text-slate-500 mt-4 text-center">
-                                Unlock all premium features and get unlimited access
-                            </p>
-                        </motion.div>
-                    )}
+                                <p className="text-xs text-slate-500 mt-4 text-center">
+                                    Unlock all premium features and get unlimited access
+                                </p>
+                            </motion.div>
+                        )}
                     </div>
 
 

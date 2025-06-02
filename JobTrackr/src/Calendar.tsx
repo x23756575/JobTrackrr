@@ -25,7 +25,10 @@ export default function CalendarPage(){
 
     const loadCalendar = async (): Promise<CalendarEvent[] | undefined> => {
         try {
-            const response = await axios.get<CalendarData[]>(`${apiBaseUrl}/appdata`);
+            const response = await axios.get<CalendarData[]>(`${apiBaseUrl}/appdata`,{
+                withCredentials:true,
+                }
+            );
 
             if (response.status === 200 && response.data) {
                 const events: CalendarEvent[] = response.data.map(item => ({

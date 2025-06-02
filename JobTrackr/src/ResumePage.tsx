@@ -90,13 +90,13 @@ export default function ResumePage(): React.ReactElement {
 
         async function fetchPaidStatus() {
             try {
-                const timer = setTimeout(async () => {
-                    const response = await fetch(`${apiBaseUrl}/haspaid`);
-                    const hasPaid = await response.json();
-                    setPaid(hasPaid)
-                    console.log(hasPaid);
-                },100);
-                return () => clearTimeout(timer);
+                const response = await fetch(`${apiBaseUrl}/haspaid`, {
+                    credentials: "include"
+                });
+                const hasPaid = await response.json();
+                console.log('before',hasPaid)
+                setPaid(Boolean(hasPaid));
+                console.log(hasPaid);
 
             } catch (error) {
                 console.error(error);
