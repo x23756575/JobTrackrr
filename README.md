@@ -18,6 +18,12 @@
 - 💳 **Stripe Payment Plans** - integrated and tested (ready for deployment)
 
 ---
+## 🧱 Tech Stack
+
+⚙️ Backend      : Spring Boot, JPA, Hibernate, Stanford CoreNLP, OAuth2
+🌐 Frontend     : React, GSAP
+🗄️ Database     : Supabase (PostgreSQL)
+
 
 ## [🎥 Demo Video](https://youtu.be/juEtufvDWPc)
 
@@ -25,7 +31,11 @@
 
 ---
 
+
 ## 🛠 Install
 
 ```bash
 npm install
+
+```bash
+npm run dev
