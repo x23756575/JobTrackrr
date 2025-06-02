@@ -20,9 +20,9 @@
 ---
 ## 🧱 Tech Stack
 
-⚙️ Backend      : Spring Boot, JPA, Hibernate, Stanford CoreNLP, OAuth2
-🌐 Frontend     : React, GSAP
-🗄️ Database     : Supabase (PostgreSQL)
+⚙️ **Backend**      : Spring Boot, JPA, Hibernate, Stanford CoreNLP, OAuth2  
+🌐 **Frontend**     : React, GSAP  
+🗄️ **Database**     : Supabase (PostgreSQL)  
 
 
 ## [🎥 Demo Video](https://youtu.be/juEtufvDWPc)
