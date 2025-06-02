@@ -29,7 +29,10 @@ npm install
 ```bash
 npm run dev
 ```
-[![Demo video](https://img.youtube.com/vi/juEtufvDWPc/0.jpg)](https://youtu.be/juEtufvDWPc)
+
+## 🎥 Demo Video
+
+[![](https://img.youtube.com/vi/juEtufvDWPc/0.jpg)](https://youtu.be/juEtufvDWPc)
 
 ## Author
 
